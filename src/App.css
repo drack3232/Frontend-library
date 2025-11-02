@@ -48,20 +48,17 @@ h1 {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.header-container {
+.header-container-flex {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 0 20px;
+  justify-content: space-between; /* Розштовхує лівий і правий блоки */
+  height: 64px;
 }
 
-.header-left {
+.header-left-flex {
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 24px;
 }
 
 .logo {
@@ -96,6 +93,25 @@ h1 {
   width: 100%;
   height: 2px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+.search-input-header {
+  width: 100%;
+  padding: 8px 12px; /* Внутрішні відступи */
+  font-size: 0.9rem;
+  border: 1px solid #ccc; /* Сіра рамка */
+  border-radius: 20px; /* Заокруглені кути */
+  box-sizing: border-box; /* Важливо для правильних розмірів */
+  transition: all 0.2s ease-in-out;
+}
+
+.search-form-header {
+  width: 300px; /* Можеш змінити ширину, як тобі подобається */
+}
+
+.search-input-header:focus {
+  border-color: #007bff; /* Синя рамка при фокусі */
+  box-shadow: 0 0 0 2px rgba(0,123,255,.25); /* Тінь при фокусі */
+  outline: none; /* Прибираємо стандартний контур */
 }
 
 .user-actions {
@@ -216,33 +232,45 @@ h1 {
   resize: vertical;
 }
 
-/* ==================== СІТКА І КАРТКИ КНИГ ==================== */
+/* ==================== СІТКА І КАРТКИ КНИГ (Новий дизайн) ==================== */
+
+/* Контейнер для всіх карток */
 .books-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 25px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Зробимо картки трохи вужчими */
+  gap: 30px; /* Збільшимо відстань */
   padding-bottom: 40px;
 }
 
+/* Обгортка-посилання для картки */
+.book-card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Сама картка */
 .book-card {
   background: white;
-  border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 8px; /* Менш заокруглені кути */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07); /* М'якша тінь */
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  height: 100%; /* Розтягуємо картку на всю висоту */
   transition: all 0.3s ease;
 }
 
 .book-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
+/* Контейнер для обкладинки */
 .book-cover-container {
-  height: 220px;
   position: relative;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  width: 100%;
+  aspect-ratio: 2 / 3; /* Співвідношення сторін як у книги */
+  background-color: #f0f2f5;
 }
 
 .book-cover-container::before {
@@ -251,58 +279,52 @@ h1 {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 3rem;
-  color: #6c757d;
-  z-index: 1;
+  font-size: 2.5rem;
+  color: #adb5bd;
 }
 
 .book-cover-container img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
   z-index: 2;
-  transition: transform 0.5s ease;
 }
 
-.book-card:hover .book-cover-container img {
-  transform: scale(1.1);
-}
-
+/* Інформація під обкладинкою */
 .book-info {
-  padding: 20px;
-  flex-grow: 1;
+  padding: 15px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  flex-grow: 1; /* Дозволяє цьому блоку займати весь вільний простір */
 }
 
 .book-title {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #2c3e50;
-  margin: 0;
-  line-height: 1.3;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #212529;
+  margin: 0 0 4px;
+  /* Обрізаємо текст, якщо він не вміщується в один рядок */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .book-author {
-  color: #6c757d;
-  font-weight: 600;
-  font-size: 1rem;
-  margin: 0;
-}
-
-.book-meta {
-  color: #868e96;
   font-size: 0.9rem;
+  color: #6c757d;
   margin: 0;
 }
 
+/* Кнопки дій (видалення/редагування) */
 .book-actions {
   display: flex;
   gap: 10px;
-  margin-top: auto;
-  padding: 0 20px 20px;
+  margin-top: auto; /* Притискає кнопки до низу картки */
+  padding: 15px;
+  padding-top: 0;
 }
 
 /* ==================== ФУТЕР (FOOTER) ==================== */
@@ -342,7 +364,7 @@ h1 {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
+  right: 1;
   bottom: 0;
   z-index: 2000;
   display: flex;
@@ -551,3 +573,211 @@ h1 {
 .book-detail-cover img { width: 100%; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.15); }
 .book-detail-info h1 { text-align: left; margin-top: 0; }
 .book-detail-info h2 { text-align: left; margin: 0 0 20px; color: #6c757d; font-weight: 500; }
+.book-card.clickable:hover {
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15); /* Робимо тінь яскравішою */
+  transform: translateY(-5px); /* Трохи піднімаємо картку */
+}
+.genre-slider-container {
+  margin: 40px auto;
+}
+
+.genre-slider-container h2 {
+  text-align: left;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+}
+/* ==================== СТОРІНКА ДЕТАЛІЗАЦІЇ КНИГИ (PRO-дизайн) ==================== */
+.book-detail-page {
+  background-color: #fff; /* Білий фон для чистоти */
+  padding: 30px 0;
+}
+
+.book-detail-grid {
+  display: grid;
+  grid-template-columns: 350px 1fr; /* Фіксована ліва колонка, гнучка права */
+  gap: 50px;
+  align-items: flex-start;
+}
+
+.book-detail-left-column {
+  position: sticky;
+  top: 100px; /* "Прилипає" при скролі */
+}
+
+.book-detail-cover img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+}
+
+.book-detail-right-column h1 {
+  text-align: left;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0 0 5px;
+  line-height: 1.2;
+}
+
+.book-detail-author-link {
+  font-size: 1.1rem;
+  color: #555;
+  margin: 0 0 25px;
+  font-weight: 400;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.book-detail-author-link:hover {
+  color: #f25a38;
+}
+
+/* --- Секції --- */
+.detail-section {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.detail-section h3 {
+  font-size: 1.8rem;
+  margin: 0 0 20px;
+  font-weight: 700;
+}
+
+/* --- Характеристики --- */
+.characteristics-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.characteristics-table td {
+  padding: 10px 5px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.characteristics-table td:first-child {
+  color: #6c757d;
+  width: 40%;
+}
+
+/* --- Відгуки --- */
+.reviews-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.btn-outline {
+  padding: 8px 16px;
+  border: 1px solid #f25a38;
+  color: #f25a38;
+  background-color: transparent;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-outline:hover {
+  background-color: #f25a38;
+  color: white;
+}
+
+.review-card {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 20px 0;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.review-author {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.stars { color: #f39c12; }
+.review-comment { line-height: 1.7; }
+
+/* --- Блок покупки (Purchase Box) --- */
+.purchase-box-wrapper {
+  position: sticky;
+  top: 100px;
+}
+
+.purchase-box {
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.price-container {
+  margin-bottom: 15px;
+}
+
+.current-price {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #f25a38;
+  margin-right: 10px;
+}
+
+.old-price {
+  font-size: 1.2rem;
+  color: #aaa;
+  text-decoration: line-through;
+}
+
+.btn-add-to-cart {
+  width: 100%;
+  padding: 12px 25px !important;
+  font-size: 1.1rem !important;
+}
+
+/* Адаптивність */
+@media (max-width: 900px) {
+  .book-detail-grid { grid-template-columns: 1fr; }
+  .book-detail-left-column, .purchase-box-wrapper { position: static; }
+}
+/* === СТИЛІ ДЛЯ КАРУСЕЛІ КНИГ (ОНОВЛЕНО НА GRID) === */
+
+.book-carousel-grid-scroll {
+  /* Вмикає Grid, але з автоматичними колонками */
+  display: grid;
+  
+  /* Кожна колонка має фіксовану ширину (256px), 
+     це твій клас w-64 з `BookCarousel.js`, який ми прибрали */
+  grid-auto-flow: column;
+  grid-auto-columns: 256px;
+
+  /* Горизонтальна прокрутка */
+  overflow-x: auto;
+  gap: 1.5rem; /* 24px, такий самий gap */
+  padding-bottom: 1rem; /* Відступ для тіні */
+  
+  /* Магія "прилипання" */
+  scroll-snap-type: x mandatory;
+}
+
+.book-carousel-grid-scroll > div {
+  /* Кожна картка (прямий нащадок) прилипає */
+  scroll-snap-align: start;
+}
+
+/* Ховаємо скролбар (як і раніше) */
+.book-carousel-grid-scroll::-webkit-scrollbar {
+  display: none;
+}
+.book-carousel-grid-scroll {
+  -ms-overflow-style: none;  /* IE та Edge */
+  scrollbar-width: none;  /* Firefox */
+}

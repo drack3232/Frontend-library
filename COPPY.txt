@@ -1,0 +1,363 @@
+ import { useEffect, useState } from "react";
+ // Додай useParams, якщо будеш робити BookDetailPage
+ import { BrowserRouter, Routes, Route, Link, useParams } from "react-router-dom";
+ import axios from "axios";
+ import "./App.css";
+
+ // === ТВОЇ ІМПОРТИ ===
+ import Header from "./Header";
+ import Footer from "./Components/Footer";
+ import Portfolio from "./Components/Portfolio";
+ import RegisterForm from "./Components/Register";
+ import LoginForm from "./Components/Login";
+ // ProfilePage тепер визначений всередині App
+ // import ProfilePage from "./Components/ProfilePage";
+ import OrderPage from "./Components/OrderPage";
+ import LibraryPage from "./Components/LibraryPage";
+ import BookDetailPage from "./Components/BookDetailPage";
+ // MainPage і Layout, здається, більше не потрібні в цій структурі
+ // import MainPage from "./Components/MainPage";
+ // import Layout from './Components/Layout';
+
+
+ // --- Головний компонент App ---
+ function App() {
+
+   // ============================================
+   // === СТАН КОМПОНЕНТА (State) ================
+   // ============================================
+
+   const [books, setBooks] = useState([]);
+   const [loading, setLoading] = useState(true);
+   const [newBook, setNewBook] = useState({ title: "", author: "" });
+   const [showLogin, setShowLogin] = useState(false);
+   const [showRegister, setShowRegister] = useState(false);
+
+   // --- Стан для Бібліотеки (Бажаного) ---
+   const [wishlist, setWishlist] = useState(new Set());
+
+   // Базовий URL для API
+   const API_URL = "http://localhost:5000"; // Переконайся, що порт правильний
+
+   // ============================================
+   // === КОМПОНЕНТ СТОРІНКИ ПРОФІЛЮ =============
+   // ============================================
+   // (Визначений тут, як ти і зробив раніше)
+   const ProfilePage = () => {
+     const [user, setUser] = useState(null);
+     const [loadingProfile, setLoadingProfile] = useState(true); // Перейменував змінну
+
+     useEffect(() => {
+       const fetchProfile = async () => {
+         const token = localStorage.getItem('token');
+         if (!token) {
+           setLoadingProfile(false);
+           return;
+         }
+         try {
+           // Використовуємо API_URL
+           const res = await axios.get(`${API_URL}/profile`, {
+             headers: { 'Authorization': `Bearer ${token}` }
+           });
+           setUser(res.data);
+         } catch (error) {
+           console.error("Не вдалося завантажити профіль", error);
+         } finally {
+           setLoadingProfile(false);
+         }
+       };
+       fetchProfile();
+     }, []);
+
+     if (loadingProfile) { // Використовуємо нову змінну
+       return <div className="loading">🔄 Завантаження профілю...</div>;
+     }
+     if (!user) {
+       return (
+         <div className="container">
+           <h2>Будь ласка, увійдіть, щоб побачити свій кабінет.</h2>
+           {/* Можна додати кнопку для перенаправлення на логін */}
+         </div>
+       );
+     }
+     return (
+       <div className="profile-page-container container mx-auto px-4 py-8"> {/* Додав класи */}
+         <div className="profile-card bg-white p-6 rounded-lg shadow-md"> {/* Додав класи */}
+           <h1 className="text-2xl font-bold mb-4">Особистий кабінет</h1>
+           <div className="profile-section mb-4">
+             <h2 className="text-xl font-semibold mb-2">Мої дані</h2>
+             <div className="profile-details">
+               <p><strong>Ім'я:</strong> {user.name}</p>
+               <p><strong>Email:</strong> {user.email}</p>
+             </div>
+           </div>
+           <div className="profile-section mb-4">
+             <h2 className="text-xl font-semibold mb-2">Історія замовлень</h2>
+             <p className="profile-placeholder text-gray-500">У вас ще немає замовлень.</p>
+           </div>
+           <div className="profile-section">
+             <h2 className="text-xl font-semibold mb-2">Список бажань</h2>
+             <p className="profile-placeholder text-gray-500">Ваш список бажань порожній.</p>
+             {/* Сюди можна буде додати список книг з wishlist */}
+           </div>
+         </div>
+       </div>
+     );
+   };
+
+   // ============================================
+   // === ФУНКЦІЇ ДЛЯ РОБОТИ З ДАНИМИ ============
+   // ============================================
+
+   // --- Завантаження списку книг ---
+   const fetchBooks = async () => {
+     try {
+       setLoading(true);
+       const res = await axios.get(`${API_URL}/books`);
+       setBooks(res.data);
+     } catch (err) {
+       console.error("Помилка завантаження книг:", err);
+     } finally {
+       setLoading(false);
+     }
+   };
+
+   // --- Завантаження списку бажаного (ID книг) ---
+   const fetchWishlist = async () => {
+     const token = localStorage.getItem('token');
+     if (!token) return; // Якщо не залогінений, нічого не робимо
+     try {
+       const res = await axios.get(`${API_URL}/api/wishlist`, {
+         headers: { 'Authorization': `Bearer ${token}` }
+       });
+       // Оновлюємо стан Set з отриманими ID
+       setWishlist(new Set(res.data));
+     } catch (error) {
+       // Не виводимо помилку в консоль, якщо це 401/403 (користувач просто не увійшов)
+       if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+         console.log("Користувач не автентифікований для завантаження wishlist.");
+       } else {
+         console.error('Не вдалося завантажити список бажаного:', error);
+       }
+     }
+   };
+
+   // --- Додавання нової книги (з форми) ---
+   const addBook = async () => {
+     if (!newBook.title || !newBook.author) return alert("Заповніть назву та автора");
+     try {
+       await axios.post(`${API_URL}/books`, newBook);
+       fetchBooks(); // Оновлюємо список книг
+       setNewBook({ title: "", author: "" }); // Очищуємо форму
+     } catch (err) {
+       console.error("Помилка додавання:", err);
+       alert("Помилка при додаванні книги"); // Повідомлення для користувача
+     }
+   };
+
+   // --- Додавання/видалення книги з бібліотеки (кнопка) ---
+   const handleToggleWishlist = async (bookId) => {
+     const token = localStorage.getItem('token');
+     // Якщо немає токена - показуємо модалку логіну
+     if (!token) {
+       setShowLogin(true);
+       return;
+     }
+     // Перевіряємо, чи книга вже є в бібліотеці
+     const isAdded = wishlist.has(bookId);
+     try {
+       if (isAdded) {
+         // Видаляємо з сервера
+         await axios.delete(`${API_URL}/api/wishlist/${bookId}`, {
+           headers: { 'Authorization': `Bearer ${token}` }
+         });
+         // Оновлюємо стан локально (видаляємо ID)
+         setWishlist(prev => {
+           const newWishlist = new Set(prev);
+           newWishlist.delete(bookId);
+           return newWishlist;
+         });
+       } else {
+         // Додаємо на сервер
+         await axios.post(`${API_URL}/api/wishlist`, { bookId }, {
+           headers: { 'Authorization': `Bearer ${token}` }
+         });
+         // Оновлюємо стан локально (додаємо ID)
+         setWishlist(prev => new Set(prev).add(bookId));
+       }
+     } catch (error) {
+       console.error('Помилка оновлення списку бажаного:', error);
+       // Повідомлення користувачу про помилку
+       alert("Сталася помилка. Спробуйте пізніше.");
+     }
+   };
+
+   // ============================================
+   // === ЕФЕКТИ (useEffect) =====================
+   // ============================================
+
+   // Завантажуємо книги та wishlist при першому рендері
+   useEffect(() => {
+     fetchBooks();
+     fetchWishlist(); // Важливо завантажити wishlist тут
+   }, []); // Пустий масив залежностей означає "запустити один раз"
+
+   // ============================================
+   // === УМОВНИЙ РЕНДЕР (Loading) ===============
+   // ============================================
+
+   // Показуємо завантаження, якщо книги ще не завантажені
+   // (loading - це стан завантаження книг, не профілю)
+   if (loading && books.length === 0) {
+     return <div className="loading fixed inset-0 flex items-center justify-center bg-white z-50">🔄 Завантаження...</div>;
+   }
+
+   // ============================================
+   // === РЕНДЕР ГОЛОВНОГО КОМПОНЕНТА (JSX) =====
+   // ============================================
+
+   return (
+     <BrowserRouter>
+       {/* Головна обгортка */}
+       <div className="app-layout flex flex-col min-h-screen bg-gray-50"> {/* Додав фон */}
+
+         {/* --- Шапка Сайту --- */}
+         <Header
+           onLoginClick={() => setShowLogin(true)}
+           onRegisterClick={() => setShowRegister(true)}
+         />
+
+         {/* --- Основний Контент (де змінюються сторінки) --- */}
+         <main className="main-content flex-grow container mx-auto px-4 py-8">
+           <Routes>
+
+             {/* --- Маршрут для Головної Сторінки --- */}
+             <Route
+               path="/"
+               element={
+                 // React Fragment для групування елементів
+                 <>
+                   <Portfolio />
+                   {/* Використовуємо container тут, якщо він потрібен */}
+                   <div className="container">
+                     {/* --- Секція Додавання Книги --- */}
+                     <div className="form-section bg-white p-4 rounded shadow mb-8">
+                       <h2 className="text-xl font-semibold mb-3">Додати нову книгу</h2>
+                       <div className="form flex flex-col md:flex-row gap-3">
+                         <input
+                           className="border p-2 rounded flex-grow"
+                           placeholder="Назва книги *"
+                           value={newBook.title}
+                           onChange={e => setNewBook({ ...newBook, title: e.target.value })}
+                         />
+                         <input
+                           className="border p-2 rounded flex-grow"
+                           placeholder="Автор *"
+                           value={newBook.author}
+                           onChange={e => setNewBook({ ...newBook, author: e.target.value })}
+                         />
+                         <button
+                           onClick={addBook}
+                           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+                         >
+                           ➕ Додати книгу
+                         </button>
+                       </div>
+                     </div>
+
+                     {/* --- Секція Каталогу Книг --- */}
+                     <h2 className="text-2xl font-bold mb-4">Каталог Книг</h2>
+                     {/* Додав перевірку loading ще раз тут, якщо книги завантажуються */}
+                     {loading ? (
+                       <div className="text-center py-10">🔄 Завантаження книг...</div>
+                     ) : (
+                       // Використовуємо grid для карток
+                       <div className="books-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                         {/* Перебираємо масив книг */}
+                         {books.map(book => {
+                           const bookId = book.id; // MySQL використовує 'id'
+                           // Перевіряємо, чи є ця книга в бібліотеці
+                           const isBookInWishlist = wishlist.has(bookId);
+
+                           return (
+                             // Контейнер для картки і кнопки
+                             <div key={bookId} className="book-card-container flex flex-col bg-white rounded-lg shadow overflow-hidden transition-shadow hover:shadow-lg">
+                               {/* Посилання на детальну сторінку */}
+                               <Link to={`/books/${bookId}`} className="book-card-link flex-grow flex flex-col">
+                                 {/* Картка книги */}
+                                 <div className="book-card h-full flex flex-col">
+                                   {/* Обкладинка */}
+                                   <div className="book-cover-container h-64 bg-gray-200"> {/* Додав фон */}
+                                     <img
+                                       className="w-full h-full object-cover"
+                                       src={book.cover_url}
+                                       alt={book.title}
+                                       // Заглушка, якщо фото не завантажилось
+                                       onError={(e) => { e.target.src = 'https://placehold.co/400x600/eee/aaa?text=No+Image'; }}
+                                     />
+                                   </div>
+                                   {/* Інформація про книгу */}
+                                   <div className="book-info p-4 flex-grow flex flex-col justify-between">
+                                     <div>
+                                       <h3 className="book-title font-bold text-lg truncate mb-1">{book.title}</h3>
+                                       <p className="book-author text-gray-600 text-sm">{book.author}</p>
+                                     </div>
+                                   </div>
+                                 </div>
+                               </Link> {/* Кінець Link */}
+
+                               {/* --- Кнопка Додати/Видалити з Бібліотеки --- */}
+                               <div className="p-4 pt-0"> {/* Додав відступ для кнопки */}
+                                 <button
+                                   onClick={() => handleToggleWishlist(bookId)}
+                                   // Динамічні класи для кнопки
+                                   className={`w-full p-2 rounded transition-colors text-sm font-medium ${
+                                     isBookInWishlist
+                                       ? 'bg-green-100 text-green-700 hover:bg-green-200' // Стиль для "В бібліотеці"
+                                       : 'bg-orange-500 text-white hover:bg-orange-600' // Стиль для "Додати"
+                                   }`}
+                                 >
+                                   {isBookInWishlist ? '✅ В бібліотеці' : '🧡 Додати в бібліотеку'}
+                                 </button>
+                               </div>
+
+                             </div> // Кінець book-card-container
+                           );
+                         })} {/* Кінець map */}
+                       </div> // Кінець books-grid
+                     )} {/* Кінець перевірки loading */}
+                   </div> {/* Кінець container */}
+                 </> // Кінець React Fragment
+               } // Кінець element
+             /> {/* Кінець Route для "/" */}
+
+             {/* --- Маршрути для Інших Сторінок --- */}
+             <Route path="/profile" element={<ProfilePage />} />
+             <Route path="/library" element={<LibraryPage />} />
+             <Route path="/books/:bookId" element={<BookDetailPage />} />
+             <Route path="/orders" element={<OrderPage />} />
+             {/* Додай інші маршрути тут, якщо потрібно */}
+
+           </Routes>
+         </main> {/* Кінець main-content */}
+
+         {/* --- Підвал Сайту --- */}
+         <Footer />
+
+         {/* --- Модальні вікна (Логін/Реєстрація) --- */}
+         {showRegister &&
+           <RegisterForm
+             onClose={() => setShowRegister(false)}
+             onLoginClick={() => { setShowRegister(false); setShowLogin(true); }}
+           />}
+         {showLogin && <LoginForm onClose={() => setShowLogin(false)} />}
+
+       </div> {/* Кінець app-layout */}
+     </BrowserRouter>
+   );
+ }
+
+ export default App;
+
+ // Видалені імпорти Layout та MainPage, які більше не потрібні
+

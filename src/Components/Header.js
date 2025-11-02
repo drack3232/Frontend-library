@@ -1,26 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Header = ({ onLoginClick, onRegisterClick }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null); // Приймаємо функції
   const token = localStorage.getItem('token');
-
-useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [dropdownRef]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    window.location.reload();
+    window.location.href = '/'; // Перенаправлення на головну сторінку
   };
 
   return (
@@ -36,11 +23,15 @@ useEffect(() => {
         </div>
         <div className="user-actions">
           {token ? (
-            <div className="profile-menu" ref={dropdownRef}>
-              <button className="profile-button" onClick={() => setDropdownOpen(!isDropdownOpen)}>
-                👤
-                <span className="profile-greeting">Вітаємо!</span>
+            // Новий блок для залогіненого користувача
+            <div className="profile-menu">
+              <button 
+                className="profile-button" 
+                onClick={() => setDropdownOpen(!isDropdownOpen)}
+              >
+                👤 Вітаємо!
               </button>
+
               {isDropdownOpen && (
                 <div className="dropdown-content">
                   <ul>
@@ -55,6 +46,7 @@ useEffect(() => {
               )}
             </div>
           ) : (
+            // Старий блок для гостя
             <>
               <button className="btn-login" onClick={onLoginClick}>Вхід</button>
               <button className="btn-register" onClick={onRegisterClick}>Реєстрація</button>
@@ -65,4 +57,5 @@ useEffect(() => {
     </header>
   );
 };
+
 export default Header;

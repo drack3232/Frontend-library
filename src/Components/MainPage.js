@@ -1,12 +1,33 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'; // Потрібен цей імпорт
 import Portfolio from './Portfolio';
+import GenreSlider from './GenreSlider';
+// BookList не потрібен, оскільки ми мапимо книги прямо тут
 
-const MainPage = ({ books }) => {
+const MainPage = ({ books, newBook, setNewBook, addBook }) => {
   return (
     <>
       <Portfolio />
+      <GenreSlider genre="Фентезі" />
+      
       <div className="container">
+        <div className="form-section">
+          <h2>Додати нову книгу</h2>
+          <div className="form">
+            <input
+              placeholder="Назва книги *"
+              value={newBook.title}
+              onChange={e => setNewBook({ ...newBook, title: e.target.value })}
+            />
+            <input
+              placeholder="Автор *"
+              value={newBook.author}
+              onChange={e => setNewBook({ ...newBook, author: e.target.value })}
+            />
+            <button onClick={addBook}>➕ Додати книгу</button>
+          </div>
+        </div>
+
         <h2>Каталог Книг</h2>
         <div className="books-grid">
           {books.map(book => (
@@ -24,6 +45,7 @@ const MainPage = ({ books }) => {
                   <p className="book-author">{book.author}</p>
                 </div>
               </div>
+              <Link to={`/books/${book.id}`} className="details-link"></Link>
             </Link>
           ))}
         </div>

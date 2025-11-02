@@ -1,11 +1,19 @@
-import React from "react";
+import React from 'react';
 
-const OrderPages = () => {
-    return(
-        <div className="container">
-            <h1>Мої замовлення</h1>
-            <p> Історі замовлень </p>
-        </div>
-    )
-}
-    export default OrderPages;
+const OrderPage = () => {
+  return (
+    // Ось ця обгортка - головне
+    <div className="container mx-auto px-4 py-8">
+      
+      <h1 className="text-3xl font-bold mb-6">Мої замовлення</h1>
+      
+      {/* Тут буде твій код для відображення замовлень */}
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <p>У вас ще немає замовлень.</p>
+      </div>
+
+    </div>
+  );
+};
+
+export default OrderPage;

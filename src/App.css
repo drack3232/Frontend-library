@@ -82,7 +82,7 @@ h1 {
   color: #495057;
   font-weight: 600;
   text-decoration: none;
-  transition: color 0.3s;
+    transition: color 0.3s;
 }
 
 .main-nav a:hover::after {

@@ -72,8 +72,8 @@ const BookDetailPage = () => {
                   <tr><td>Рік видання</td><td>{book.year}</td></tr>
                   <tr><td>Розділ</td><td>{book.genre}</td></tr>
                   <tr><td>Обкладинка</td><td>палітурка</td></tr>
-                  <tr><td>Сторінок</td><td>688</td></tr>
-                  <tr><td>Видавництво</td><td>КСД</td></tr>
+                  <tr><td>Сторінок</td><td>428</td></tr>
+                  <tr><td>Видавництво</td><td>Drack</td></tr>
                 </tbody>
               </table>
             </div>

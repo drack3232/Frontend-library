@@ -20,6 +20,7 @@ import BookCard from "./Components/BookCard";
 import PopularBooks from './Components/PopularBooks';
 import BookCarousel from './Components/BookCarousel';
 import SearchResultsPage from './Components/SearchResultsPage';
+import CartPage from "./Components/CartPage";
  
 // --- Головний компонент App ---
 function App() {
@@ -37,6 +38,7 @@ function App() {
   // --- Стан для Бібліотеки (Бажаного) ---
   const [wishlist, setWishlist] = useState(new Set());
   const [groupedBooks, setGroupedBooks] = useState({});
+const [cartItemCount, setCartItemCount] = useState(0);
 
   // Базовий URL для API
   const API_URL = "http://localhost:5000"; // Переконайся, що порт правильний
@@ -69,6 +71,7 @@ function App() {
       };
       fetchProfile();
     }, []);
+
 
     if (loadingProfile) { 
       return <div className="loading">🔄 Завантаження профілю...</div>;
@@ -149,6 +152,29 @@ function App() {
     }
   };
 
+ const fetchCartCount = async () => {
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('user_id'); // Ми додамо це в LoginForm
+    if (!token || !userId) {
+      setCartItemCount(0);
+      return;
+    }
+    try {
+      const res = await axios.get(`${API_URL}/cart/${userId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      setCartItemCount(res.data.length); // Оновлюємо лічильник
+    } catch (err) {
+      // Мовчки ігноруємо помилки (напр. 401, 403), щоб не заважати
+      if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+         console.log("User not auth'd for cart count");
+      } else {
+         console.error("Failed to fetch cart count:", err);
+      }
+      setCartItemCount(0); // Скидаємо лічильник при будь-якій помилці
+    }
+  };
+
   // --- Додавання нової книги (з форми) ---
   const addBook = async () => {
     if (!newBook.title || !newBook.author) return alert("Заповніть назву та автора");
@@ -204,7 +230,8 @@ function App() {
   useEffect(() => {
     // fetchBooks(); // Більше не завантажуємо "Весь каталог" на головній
     fetchWishlist();
-    fetchGroupedBooks(); // Завантажуємо наші секції-каруселі
+    fetchGroupedBooks();
+fetchCartCount(); // Завантажуємо наші секції-каруселі
   }, []); // Пустий масив залежностей означає "запустити один раз"
 
 
@@ -217,6 +244,7 @@ function App() {
         <Header
           onLoginClick={() => setShowLogin(true)}
           onRegisterClick={() => setShowRegister(true)}
+            cartItemCount={cartItemCount}
         />
 
         {/* --- Основний Контент (де змінюються сторінки) --- */}
@@ -319,6 +347,7 @@ function App() {
             <Route path="/library" element={<LibraryPage />} />
             <Route path="/books/:bookId" element={<BookDetailPage />} />
             <Route path="/orders" element={<OrderPage />} />
+            <Route path="/cart" element={<CartPage />} />
 <Route
               path="/search"
               element={

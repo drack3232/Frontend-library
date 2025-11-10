@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
+const API_URL = "http://localhost:5000";
+
 const BookDetailPage = () => {
   const { bookId } = useParams();
   const [book, setBook] = useState(null);
@@ -26,7 +28,36 @@ const BookDetailPage = () => {
     fetchData();
   }, [bookId]);
 
-  const handleAddToCart = async () => { /* ...твоя функція... */ };
+  const handleAddToCart = async () => { 
+    const token = localStorage.getItem('token');
+
+    // 1. Перевіряємо, чи користувач залогінений
+    if (!token) {
+      // Якщо ні, ти можеш показати модальне вікно логіну
+      // (але зараз просто покажемо alert)
+      alert("Будь ласка, увійдіть, щоб додати товар у кошик.");
+      return; 
+    }
+
+    try {
+      // 2. Відправляємо запит на бекенд
+      await axios.post(
+        `${API_URL}/cart/add`, 
+        { bookId: book.id }, // Відправляємо ID книги
+        { headers: { 'Authorization': `Bearer ${token}` } } // З токеном
+      );
+      
+      // 3. Повідомляємо про успіх
+      alert("Книгу успішно додано в кошик!"); 
+      
+      // 4. (Опціонально) Можна змінити вигляд кнопки
+      // setAddedToCart(true); 
+
+    } catch (error) {
+      console.error("Помилка додавання в кошик:", error);
+      alert("Не вдалося додати книгу в кошик.");
+    }
+   };
 
   if (loading) { return <div className="loading">🔄 Завантаження...</div>; }
   if (!book) { return <div className="container"><h2>Книгу не знайдено.</h2></div>; }
@@ -104,4 +135,4 @@ const BookDetailPage = () => {
   );
 };
 
-export default BookDetailPage;
+export default BookDetailPage;  

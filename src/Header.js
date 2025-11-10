@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-// Переконайся, що твої стилі імпортуються (зазвичай в App.js або index.js)
+// Ми припускаємо, що App.css або index.css імпортується в App.js/index.js
 
 const Header = ({ onLoginClick, onRegisterClick }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const token = localStorage.getItem('token');
-  
-  // Додаємо хуки для пошуку
+   const userId = localStorage.getItem('user_id');
+   const isLoggedIn = token && userId;
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user_id');
     window.location.href = '/';
   };
 
@@ -22,42 +23,40 @@ const Header = ({ onLoginClick, onRegisterClick }) => {
     }
   };
 
-  // Використовуємо класи з твого App.css (app-header, container)
-  // та додаємо нові, які ми опишемо в Кроці 2
+  // Тепер весь JSX використовує класи з твого App.css
   return (
     <header className="app-header">
-      {/* Ми додаємо новий клас "header-container-flex" 
-        для кращого контролю над вирівнюванням 
-      */}
       <div className="container header-container-flex">
         
-        {/* === ЛІВИЙ БЛОК (Лого, Навігація, Пошук) === */}
         <div className="header-left-flex">
           <Link to="/" className="logo">📚 Онлайн Бібліотека</Link>
           <nav className="main-nav">
             <ul>
-              <li><Link to="/">Головна</Link></li>
+              <li><Link to="/" className="main-nav-link">Головна</Link></li>
             </ul>
           </nav>
 
-          {/* === ФОРМА ПОШУКУ (без лупи) === */}
           <form onSubmit={handleSearchSubmit} className="search-form-header">
             <input
               type="text"
               placeholder="Пошук в Онлайн Бібліотеці"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="search-input-header" // Новий клас для стилізації
+              className="search-input-header"
             />
           </form>
         </div>
 
-        {/* === ПРАВИЙ БЛОК (Кнопки) === */}
         <div className="user-actions">
-          {token ? (
+          
+          <Link to="/cart" className="cart-icon-link" title="Перейти до кошика">
+            🛒
+          </Link>
+
+          {isLoggedIn ? (
             <div className="profile-menu">
               <button 
-                className="profile-button" 
+                className="profile-button"
                 onClick={() => setDropdownOpen(!isDropdownOpen)}
               >
                 👤 Вітаємо!
@@ -78,6 +77,7 @@ const Header = ({ onLoginClick, onRegisterClick }) => {
             </div>
           ) : (
             <>
+              {/* Використовуємо класи .btn-login та .btn-register з App.css */}
               <button className="btn-login" onClick={onLoginClick}>Вхід</button>
               <button className="btn-register" onClick={onRegisterClick}>Реєстрація</button>
             </>
@@ -90,3 +90,4 @@ const Header = ({ onLoginClick, onRegisterClick }) => {
 };
 
 export default Header;
+

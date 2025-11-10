@@ -710,4 +710,610 @@ h1 {
   font-size: 1rem;
   box-sizing: border-box;
 }
+/* 5. Стилі для тіла (Body) */
+.modal-body {
+  padding: 24px;
+  /* Дозволяє тілу прокручуватися, якщо вмісту забагато */
+  overflow-y: auto;
+}
 
+/* --- НОВІ СТИЛІ ДЛЯ СПИСКУ ТОВАРІВ --- */
+.modal-overlay {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); 
+  z-index: 1000; 
+  animation: fadeIn 0.4s ease-out;
+}
+.modal-content {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 16px 0 0 16px; 
+  background-color: #fff;
+  box-shadow: -5px 0 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  animation: slideInFromRight 0.4s ease-out;
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #eee;
+  flex-shrink: 0; 
+}
+.modal-header h2 {
+  margin: 0;
+  font-size: 20px;
+  margin-left: 12px;
+}
+.close-button {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #888;
+  padding: 0;
+  line-height: 1;
+}
+.close-button:hover {
+  color: #000;
+}
+.modal-tabs {
+  display: flex;
+  padding: 0 24px;
+  border-bottom: 1px solid #eee;
+  flex-shrink: 0;
+}
+.modal-tabs a {
+  text-decoration: none;
+  color: #777;
+  padding: 12px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+}
+.modal-tabs .tab-active {
+  color: #000;
+  border-bottom-color: #FDC72A; 
+}
+.modal-tabs .tab-inactive:hover {
+  color: #000;
+}
+.modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f7f7f7;
+  padding: 16px 24px;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 0;
+  border-top: 1px solid #eee;
+  flex-shrink: 0;
+}
+.checkout-button {
+  background-color: #9fca36;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.checkout-button:hover {
+  background-color: #8ab02f;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideInFromRight {
+  from { 
+    transform: translateX(100%);
+  }
+  to { 
+    transform: translateX(0);
+  }
+}
+.cart-items-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.cart-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.cart-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+.cart-item-image {
+  width: 60px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+.cart-item-details {
+  flex-grow: 1;
+}
+.cart-item-details h4 {
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.cart-item-details p {
+  margin: 0;
+  font-size: 13px;
+  color: #555;
+}
+.cart-item-price {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 16px;
+  white-space: nowrap;
+  color: #000;
+}
+
+/* === СТИЛІ ЗНАЧКА КОШИКА (майже без змін) === */
+.cart-icon-link {
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  margin: 0;
+  line-height: 1;
+  /* Додаємо колір для SVG */
+  color: #333; 
+}
+.cart-icon-link svg {
+  width: 24px;
+  height: 24px;
+}
+.cart-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #FDC72A; 
+  color: #000;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 11px;
+  line-height: 1;
+  border: 1px solid #fff;
+  transform: translate(30%, -30%); 
+}
+
+/* === НОВІ СТИЛІ ДЛЯ ПРОФІЛЮ === */
+
+/* Іконка Бажань (Сердечко) */
+.wishlist-icon-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  color: #333;
+  background: none;
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+}
+.wishlist-icon-link svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Контейнер .profile-menu (вже був, але ми його використовуємо) */
+.profile-menu {
+  position: relative; /* Важливо для позиціонування .dropdown-content */
+  margin-left: 12px;
+}
+
+/* Нова кнопка профілю */
+.profile-button {
+   display: flex;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.profile-button:hover {
+  background-color: #f0f0f0;
+}
+
+/* Іконка 👤 всередині кнопки */
+.profile-icon-wrapper {
+  position: relative;
+  margin-right: 8px;
+  color: #333;
+}
+.profile-icon-wrapper svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* Значок "15" на іконці профілю */
+.profile-badge {
+  position: absolute;
+  top: -2px;
+  right: -4px;
+  background-color: #FDC72A;
+  color: #000;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 2px 5px;
+  font-size: 10px;
+  line-height: 1;
+  border: 1px solid #fff;
+}
+
+/* Текст "ARTEM / Вітаємо!" */
+.profile-button-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 14px;
+  line-height: 1.3;
+}
+.profile-button-text span {
+  font-size: 12px;
+  color: #555;
+  text-transform: uppercase; /* Робить 'ARTEM' великими */
+}
+.profile-button-text strong {
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+}
+
+/* Стрілка (шеврон) */
+.profile-chevron {
+  margin-left: 8px;
+  color: #555;
+  transition: transform 0.2s;
+}
+.profile-chevron.open {
+  transform: rotate(180deg);
+}
+
+
+/* === НОВІ СТИЛІ ДЛЯ ВИПАДАЮЧОГО МЕНЮ === */
+/* (Замінює старий .dropdown-content) */
+
+.dropdown-content {
+  position: absolute;
+  top: calc(100% + 10px); /* 10px відступ від кнопки */
+  right: 0;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  width: 300px;
+  z-index: 1001;
+  border: 1px solid #eee;
+  overflow: hidden; /* Ховаємо кути */
+  animation: dropdownFadeIn 0.2s ease-out;
+}
+.dropdown-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Кожен елемент <li>...</li> */
+.dropdown-content li {
+  margin: 0;
+  border-bottom: 1px solid #f0f0f0; /* Роздільник */
+}
+.dropdown-content li:last-child {
+  border-bottom: none;
+}
+
+/* Посилання <a> та <button> всередині <li> */
+.dropdown-content li a,
+.dropdown-content li button {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+  font-weight: 500;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.2s;
+}
+.dropdown-content li a:hover,
+.dropdown-content li button:hover {
+  background-color: #f9f9f9;
+}
+
+/* Іконки всередині меню */
+.dropdown-content li svg {
+  width: 25px;
+  height: 25px;
+  margin-right: 12px;
+  color: #555; /* Трохи світліші іконки */
+}
+
+/* Значок "15" біля "Повідомлення" */
+.dropdown-badge {
+  margin-left: auto; /* Притискає значок до правого краю */
+  background-color: #FDC72A;
+  color: #000;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 2px 8px;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+/* Червоний текст для "Вийти" */
+.dropdown-content li.logout-item button {
+  color: #e53e3e; /* Червоний */
+}
+.dropdown-content li.logout-item svg {
+  color: #e53e3e;
+}
+
+/* Анімація появи меню */
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* --- Нові стилі для BookCard --- */
+
+.book-card-container {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  overflow: hidden; /* Важливо для заокруглення кутів */
+  display: flex;
+  flex-direction: column;
+}
+
+.book-card-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.book-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Картка займає всю висоту контейнера */
+}
+
+/* 1. Обгортка Зображення */
+.book-card-image-wrapper {
+  position: relative;
+  width: 100%;
+  /* Встановлюємо співвідношення сторін (напр. 3:4) */
+  padding-top: 150%; /* 380 / 250 = 1.52 */
+  background-color: #f0f0f0;
+}
+
+.book-card-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Масштабує зображення, щоб заповнити блок */
+  /* Стилізація, як на скріншоті (ефект 3D-книги) */
+  border-radius: 4px 12px 12px 4px;
+  transform: perspective(1000px) rotateY(-2deg);
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.book-card-link:hover .book-card-image {
+  transform: perspective(1000px) rotateY(0deg) scale(1.02);
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 2. Значок "Новинка" (синій) */
+.book-card-new-badge {
+  position: absolute;
+  top: 12px;
+  left: -4px;
+  z-index: 2;
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
+}
+
+.icon-new-badge {
+  width: 32px;
+  height: 32px;
+}
+
+/* 3. Кнопка "Сердечко" (Wishlist) */
+.book-card-wishlist-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  
+  /* Стилізація кнопки */
+  background-color: #ffffff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #333;
+}
+
+.book-card-wishlist-button:hover {
+  transform: scale(1.1);
+  background-color: #fff;
+}
+
+.book-card-wishlist-button .icon-heart {
+  width: 22px;
+  height: 22px;
+}
+
+/* Стиль для "доданого" сердечка */
+.book-card-wishlist-button.wished {
+  color: #ff4757; /* Червоний */
+}
+.book-card-wishlist-button.wished .icon-heart {
+  fill: #ff4757;
+  stroke: #ff4757;
+}
+
+/* 4. Деталі картки (текст) */
+.book-card-details {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Займає решту місця */
+}
+
+.book-card-rating {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  color: #666;
+  font-size: 13px;
+}
+
+.book-card-rating .icon-star {
+  width: 18px;
+  height: 18px;
+  margin-right: 2px;
+}
+.book-card-rating .no-rating {
+  font-style: italic;
+  color: #999;
+}
+.book-card-rating .rating-value {
+  font-weight: 600;
+  color: #333;
+  margin-left: 6px;
+  font-size: 15px;
+}
+.book-card-rating .review-count {
+  margin-left: 6px;
+  color: #888;
+}
+
+/* 5. Назва та Автор */
+.book-card-title {
+  font-size: 18px; /* Більший шрифт */
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0;
+  /* Обрізаємо довгий текст */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 46px; /* 2 рядки * 23px (приблизно) */
+}
+
+.book-card-author {
+  font-size: 14px;
+  color: #555;
+  margin: 4px 0 0 0;
+  flex-grow: 1; /* Відштовхує ціну вниз */
+  padding-bottom: 12px;
+}
+
+/* 6. Підвал картки (Ціна + Кошик) */
+.book-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto; /* Завжди внизу */
+}
+
+.book-card-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.book-card-price .original-price {
+  font-size: 14px;
+  color: #999;
+  text-decoration: line-through;
+  line-height: 1;
+}
+
+.book-card-price .current-price {
+  font-size: 22px; /* Велика ціна */
+  font-weight: 700;
+  color: #d9534f; /* Червонуватий */
+  line-height: 1;
+}
+
+/* 7. Кнопка "Кошик" (жовта) */
+.book-card-cart-button {
+  background-color: #FDC72A; /* Жовтий, як у вашому хедері */
+  color: #000;
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.book-card-cart-button:hover {
+  background-color: #fdbd00;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.book-card-cart-button svg {
+  width: 22px;
+  height: 22px;
+}

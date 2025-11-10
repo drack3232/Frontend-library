@@ -31,10 +31,8 @@ const BookDetailPage = () => {
   const handleAddToCart = async () => { 
     const token = localStorage.getItem('token');
 
-    // 1. Перевіряємо, чи користувач залогінений
     if (!token) {
-      // Якщо ні, ти можеш показати модальне вікно логіну
-      // (але зараз просто покажемо alert)
+      
       alert("Будь ласка, увійдіть, щоб додати товар у кошик.");
       return; 
     }

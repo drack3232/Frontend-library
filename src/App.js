@@ -12,7 +12,7 @@ import LoginForm from "./Components/Login";
 import OrderPage from "./Components/OrderPage";
 import LibraryPage from "./Components/LibraryPage";
 import BookDetailPage from "./Components/BookDetailPage";
-import BookCard from "./Components/BookCard";
+// import BookCard from "./Components/BookCard"; // Імпортується у компонентах нижче
 import PopularBooks from './Components/PopularBooks';
 import BookCarousel from './Components/BookCarousel';
 import SearchResultsPage from './Components/SearchResultsPage';
@@ -29,14 +29,10 @@ function App() {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [wishlist, setWishlist] = useState(new Set());
-  const [groupedBooks, setGroupedBooks] = useState({});
-  const [cartItems, setCartItems] = useState([]);
-  
-  // === НОВІ ДАНІ ДЛЯ ХЕДЕРА ===
-  // (В ідеалі, 'userName' має братися з 'user' об'єкта після логіну)
-  const [userName, setUserName] = useState("ARTEM"); // 👈 MOCK DATA
-  const [notificationCount, setNotificationCount] = useState(15); // 👈 MOCK DATA
-  // -------------------------
+  // (ВИДАЛЕНО: 'groupedBooks' useState)
+  const [cartItems, setCartItems] = useState([]);
+  const [userName, setUserName] = useState("ARTEM");
+  const [allBooks, setAllBooks] = useState([]);
 
   const API_URL = "http://localhost:5000";
 
@@ -57,8 +53,7 @@ function App() {
             headers: { 'Authorization': `Bearer ${token}` }
           });
           setUser(res.data);
-          // !!! ПОРАДА: Ось де ви маєте встановлювати ім'я користувача
-          // setUserName(res.data.name.toUpperCase()); 
+          // setUserName(res.data.name.toUpperCase()); 
         } catch (error) {
           console.error("Не вдалося завантажити профіль", error);
         } finally {
@@ -104,18 +99,6 @@ function App() {
   };
 
   // === ФУНКЦІЇ API ===
-  const fetchBooks = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get(`${API_URL}/books`);
-      setBooks(res.data);
-    } catch (err) {
-      console.error("Помилка завантаження книг:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const fetchWishlist = async () => {
     const token = localStorage.getItem('token');
     if (!token) return; 
@@ -129,12 +112,14 @@ function App() {
     }
   };
 
-  const fetchGroupedBooks = async () => {
+  // (ВИДАЛЕНО: 'fetchGroupedBooks' - нам це більше не потрібно)
+
+  const fetchAllBooks = async () => {
     try {
-      const res = await axios.get(`${API_URL}/books/by-genre`);
-      setGroupedBooks(res.data);
+      const res = await axios.get(`${API_URL}/books`);
+      setAllBooks(res.data);
     } catch (err) {
-      console.error("Помилка завантаження книг за жанром:", err);
+      console.error("Помилка завантаження всіх книг:", err);
     }
   };
 
@@ -160,7 +145,7 @@ function App() {
     if (!newBook.title || !newBook.author) return alert("Заповніть назву та автора");
     try {
       await axios.post(`${API_URL}/books`, newBook);
-      fetchGroupedBooks();
+      fetchAllBooks(); // 👈 Оновлюємо всі книги (це також оновить каруселі)
       setNewBook({ title: "", author: "" });
     } catch (err) {
       console.error("Помилка додавання:", err);
@@ -172,11 +157,11 @@ function App() {
     if (!token) {
       setShowLogin(true);
       return;
-    }
+    }
     const isAdded = wishlist.has(bookId);
     try {
       if (isAdded) {
-        await axios.delete(`${API_URL} wishlist/${bookId}`, {
+        await axios.delete(`${API_URL}/api/wishlist/${bookId}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         setWishlist(prev => {
@@ -185,7 +170,7 @@ function App() {
           return newWishlist;
         });
       } else {
-        await axios.post(`${API_URL} /wishlist`, { bookId }, {
+        await axios.post(`${API_URL}/api/wishlist`, { bookId }, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         setWishlist(prev => new Set(prev).add(bookId));
@@ -195,19 +180,70 @@ function App() {
     }
   };
 
+ const handleAddToCart = async (book) => {
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('user_id');
+    if (!token || !userId) {
+      setShowLogin(true);
+      return;
+    }
+    try {
+      await axios.post(`${API_URL}/cart/${userId}/add`, { 
+        bookId: book.id, 
+        quantity: 1
+      }, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      fetchCartItems(); // Оновлюємо кошик
+    } catch (error) {
+      console.error('Не вдалося додати товар у кошик:', error);
+    }
+  };
+
   // === useEffect ===
   useEffect(() => {
     fetchWishlist();
-    fetchGroupedBooks();
-    fetchCartItems();
+    fetchAllBooks(); // 👈 Завантажуємо ВСІ книги
+    fetchCartItems();
+    // (fetchGroupedBooks видалено)
   }, []);
 
 
-  // === РОЗРАХУНКИ СТАНУ ===
-  const cartItemCount = cartItems.length;
-  const cartTotal = useMemo(() => {
-    return cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-  }, [cartItems]);
+  // === РОЗРАХУНКИ СТАНУ ===
+  const cartItemCount = cartItems.length;
+  const cartTotal = useMemo(() => {
+    return cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+  }, [cartItems]);
+
+  // === НОВИЙ useMemo ДЛЯ ГРУПУВАННЯ КНИГ ===
+  // Це автоматично групує всі книги за жанром
+  const groupedBooks = useMemo(() => {
+    if (allBooks.length === 0) {
+      return {};
+    }
+    
+    // 1. Групуємо книги в об'єкт
+    const groups = {};
+    allBooks.forEach(book => {
+      // Використовуємо "Інше" якщо жанр не вказано
+      const genre = book.genre || "Інше"; 
+      if (!groups[genre]) {
+        groups[genre] = [];
+      }
+      groups[genre].push(book);
+    });
+    
+    // 2. Сортуємо жанри за алфавітом
+    const sortedGenres = Object.keys(groups).sort();
+    
+    // 3. Створюємо новий відсортований об'єкт
+    const sortedGroupedBooks = {};
+    sortedGenres.forEach(genre => {
+      sortedGroupedBooks[genre] = groups[genre];
+    });
+
+    return sortedGroupedBooks;
+  }, [allBooks]); // 👈 Цей код виконається, коли 'allBooks' завантажаться
 
   return (
     <BrowserRouter>
@@ -217,33 +253,40 @@ function App() {
           onLoginClick={() => setShowLogin(true)}
           onRegisterClick={() => setShowRegister(true)}
           cartItemCount={cartItemCount}
-          cartItems={cartItems}
-          cartTotal={cartTotal}
-          // === ПЕРЕДАЄМО НОВІ ПРОПСИ ===
-          userName={userName}
-          notificationCount={notificationCount}
+          cartItems={cartItems}
+          cartTotal={cartTotal}
+          userName={userName}
         />
 
         <main className="main-content flex-grow">
-          <Routes>
+          <Routes>
 
             <Route
               path="/"
               element={
                 <>
                   <div className="bg-white">
-                    <Portfolio />
+                    <div className="container mx-auto px-4 py-8">
+                      <Portfolio />
+                    </div>
                   </div>
 
+                {/* (Секція PopularBooks - за вашим бажанням, 
+                   ви можете її залишити або прибрати, 
+                   якщо хочете *тільки* сортування за жанрами) 
+                */}
                   <div className="bg-white pt-12 pb-4"> 
                     <div className="container mx-auto px-4"> 
                       <PopularBooks 
                         wishlist={wishlist}
                         onToggleWishlist={handleToggleWishlist}
+                        onAddToCart={handleAddToCart}
                       />
                     </div>
                   </div>
 
+                {/* === ОСНОВНА СЕКЦІЯ З ЖАНРАМИ === */}
+                {/* Вона автоматично створить карусель для КОЖНОГО жанру з allBooks */}
                   <div className="bg-white pt-8 pb-12"> 
                     <div className="container mx-auto px-4"> 
                       {Object.keys(groupedBooks).length > 0 ? (
@@ -254,15 +297,16 @@ function App() {
                             books={booksInGenre}
                             wishlist={wishlist}
                             onToggleWishlist={handleToggleWishlist}
+                            onAddToCart={handleAddToCart}
                           />
                         ))
-                    ) : (
+                      ) : (
                         <div className="text-center py-10">🔄 Завантаження секцій...</div>
-                    )}
+                      )}
                     </div>
                   </div>
 
-        _       <div className="py-12">
+                  <div className="py-12">
                     <div className="container mx-auto px-4">
                       <div className="form-section bg-white p-6 rounded-lg shadow-md max-w-3xl mx-auto">
                         <h2 className="text-xl font-semibold mb-3">Додати нову книгу</h2>
@@ -298,25 +342,39 @@ function App() {
             <Route path="/books/:bookId" element={<BookDetailPage />} />
             <Route path="/orders" element={<OrderPage />} />
             <Route path="/cart" element={<CartPage />} />
-             <Route path="/wishlist" element={<WishlistPage/>} />
+            
+            <Route
+              path="/wishlist"
+              element={
+                <WishlistPage
+                  allBooks={allBooks} // 👈 Передаємо ВСІ книги
+                  wishlist={wishlist}
+                  onToggleWishlist={handleToggleWishlist}
+                  onAddToCart={handleAddToCart}
+                />
+              }
+            />
+            
             <Route
               path="/search"
               element={
                 <SearchResultsPage
                   wishlist={wishlist}
-V                 onToggleWishlist={handleToggleWishlist}
+                  onToggleWishlist={handleToggleWishlist}
+                  onAddToCart={handleAddToCart}
+                  allBooks={allBooks} // 👈 Передаємо ВСІ книги
                 />
               }
             />
           </Routes>
-G       </main>
+        </main>
 
         <Footer />
 
         {showRegister &&
           <RegisterForm
             onClose={() => setShowRegister(false)}
-A           onLoginClick={() => { setShowRegister(false); setShowLogin(true); }}
+            onLoginClick={() => { setShowRegister(false); setShowLogin(true); }}
           />}
         {showLogin && <LoginForm onClose={() => setShowLogin(false)} />}
 
@@ -324,6 +382,5 @@ A           onLoginClick={() => { setShowRegister(false); setShowLogin(true
     </BrowserRouter>
   );
 }
-
 
 export default App;

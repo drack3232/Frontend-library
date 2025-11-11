@@ -1,78 +1,94 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom'; // Хук для отримання параметрів URL (?query=...)
+import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import BookCard from './BookCard'; // Перевикористовуємо нашу картку
+// Використовуємо .js, як у вашому прикладі
+import BookCard from './BookCard.js'; 
 
 const API_URL = "http://localhost:5000";
 
-const SearchResultsPage = ({ wishlist, onToggleWishlist }) => { // Приймаємо wishlist і функцію з App.js
-  const [searchResults, setSearchResults] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [searchParams] = useSearchParams(); // Отримуємо параметри URL
-  const query = searchParams.get('query'); // Витягуємо значення параметра 'query'
+const SearchResultsPage = ({ 
+  wishlist, 
+  onToggleWishlist, 
+  onAddToCart
+}) => {
+  const [searchResults, setSearchResults] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get('query');
 
-  useEffect(() => {
-    // Функція для завантаження результатів пошуку
-    const fetchSearchResults = async () => {
-      if (!query) { // Якщо запиту немає, нічого не робити
-        setSearchResults([]);
-        setLoading(false);
-        return;
-      }
+  useEffect(() => {
+    // Повертаємо вашу логіку пошуку через API
+    const fetchSearchResults = async () => {
+      if (!query) { 
+        setSearchResults([]);
+        setLoading(false);
+        return;
+      }
 
-      try {
-        setLoading(true);
-        setError(null);
-        // Робимо запит на наш новий бекенд-ендпоінт
-        const res = await axios.get(`${API_URL}/books/search`, {
-          params: { q: query } // Передаємо запит як параметр ?q=...
-        });
-        setSearchResults(res.data);
-      } catch (err) {
-        console.error("Помилка пошуку:", err);
-        setError("Сталася помилка під час пошуку.");
-        setSearchResults([]); // Очищуємо результати у разі помилки
-      } finally {
-        setLoading(false);
-      }
-    };
+      try {
+        setLoading(true);
+        setError(null);
+        // Робимо запит до вашого бекенд-ендпоінту
+        const res = await axios.get(`${API_URL}/books/search`, {
+          params: { q: query } // Передаємо запит як параметр ?q=...
+        });
+        setSearchResults(res.data);
+      } catch (err) {
+        console.error("Помилка пошуку:", err);
+        setError("Сталася помилка під час пошуку.");
+        setSearchResults([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    fetchSearchResults();
-  }, [query]); // Перезавантажувати результати КОЖНОГО РАЗУ, коли змінюється `query` в URL
+    fetchSearchResults();
+  }, [query]); // Залежність ТІЛЬКИ від 'query'
 
-  // --- Рендер компонента ---
+  return (
+    // Використовуємо CSS класи, а не Tailwind
+    <div className="main-container search-page-container">
+      <div className="search-content-card"> 
+        <h1 className="search-title">
+          {loading ? `Пошук...` : 
+            (query && searchResults.length > 0) ? 
+            `Результати пошуку для: "${query}"` :
+            (query) ?
+            `Нічого не знайдено за запитом: "${query}"` :
+            'Введіть запит для пошуку'
+          }
+        </h1>
+        
+        {loading && <div className="loading-text">🔄 Пошук...</div>}
+        
+        {error && <div className="error-text">{error}</div>}
 
-  // Не забуваємо додати container, як ми робили для інших сторінок
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">
-        Результати пошуку для: "{query}"
-      </h1>
+        {!loading && !error && query && searchResults.length === 0 && (
+          <div className="empty-search-placeholder">
+            <p>На жаль, за вашим запитом нічого не знайдено.</p>
+            <p>Спробуйте змінити свій запит.</p>
+          </div>
+        )}
 
-      {loading && <div className="text-center py-10">🔄 Пошук...</div>}
-      
-      {error && <div className="text-center py-10 text-red-600">{error}</div>}
-
-      {!loading && !error && searchResults.length === 0 && (
-        <p className="text-center text-gray-600">На жаль, за вашим запитом нічого не знайдено.</p>
-      )}
-
-      {!loading && !error && searchResults.length > 0 && (
-        // Використовуємо ту саму сітку, що й на головній
-        <div className="books-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {searchResults.map(book => (
-            <BookCard
-              key={book.id}
-              book={book}
-              isBookInWishlist={wishlist.has(book.id)} // Перевіряємо, чи книга в бібліотеці
-              onToggleWishlist={onToggleWishlist}     // Передаємо функцію додавання/видалення
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
+        {!loading && !error && searchResults.length > 0 && (
+          // Використовуємо .books-grid, який стилізується в App.css
+          <div className="books-grid">
+            {searchResults.map(book => (
+              <BookCard
+                key={book.id}
+               book={book}
+                // === ЗАЛИШАЄМО ПРАВИЛЬНУ ПЕРЕДАЧУ ПРОПСІВ ===
+                isWished={wishlist.has(book.id)} 
+                onToggleWishlist={onToggleWishlist}
+                onAddToCart={onAddToCart}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default SearchResultsPage;

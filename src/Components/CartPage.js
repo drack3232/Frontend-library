@@ -17,10 +17,7 @@ const IconTrash = () => (
 // Компонент CartPage тепер "чистий" - він отримує все з App.js
 const CartPage = ({ cartItems = [], cartTotal, onRemoveFromCart }) => {
 
-  // (Видалено: loading, error, useState, useEffect, fetchCartItems)
-  // (Видалено: getTotalPrice, оскільки 'cartTotal' приходить з App.js)
-
-  // --- Рендер ---
+  
   
   return (
     // Використовуємо CSS-класи з App.css

@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const API_URL = "http://localhost:5000";
 
-const BookDetailPage = () => {
+const BookDetailPage = ({ onAddToCart }) => {
   const { bookId } = useParams();
   const [book, setBook] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -53,8 +53,9 @@ const BookDetailPage = () => {
 
     } catch (error) {
       console.error("Помилка додавання в кошик:", error);
-      alert("Не вдалося додати книгу в кошик.");
+    
     }
+    onAddToCart(book);
    };
 
   if (loading) { return <div className="loading">🔄 Завантаження...</div>; }

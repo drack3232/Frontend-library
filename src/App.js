@@ -156,6 +156,33 @@ const toggleTheme = () => {
     }
   };
 
+// === ВСТАВ ЦЕЙ КОД В App.js ===
+
+const handleRemoveFromCart = async (bookId) => {
+  const token = localStorage.getItem('token');
+  const userId = localStorage.getItem('user_id');
+  
+  // 1. Перевіряємо ТІЛЬКИ токен. userId з URL прибрали.
+  if (!token || !userId) {
+    console.error("Користувач не авторизований для видалення");
+    return;
+  }
+
+  try {
+    
+    await axios.post(`${API_URL}/cart/${userId}/remove`, {
+      bookId: bookId
+    }, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+  
+    fetchCartItems();
+  } catch (error) {
+    console.error('Не вдалося видалити товар з кошика:', error);
+  }
+};
+
   const handleToggleWishlist = async (bookId) => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -187,7 +214,7 @@ const toggleTheme = () => {
  const handleAddToCart = async (book) => {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('user_id');
-    if (!token || !userId) {
+    if (!token || !userId ) {
       setShowLogin(true);
       return;
     }
@@ -267,6 +294,7 @@ useEffect(()=>{
           userName={userName}
           theme={theme}
           toggleTheme={toggleTheme}
+          onRemoveFromCart={handleRemoveFromCart}
         />
 
         <main className="main-content flex-grow">
@@ -282,10 +310,7 @@ useEffect(()=>{
                     </div>
                   </div>
 
-                {/* (Секція PopularBooks - за вашим бажанням, 
-                   ви можете її залишити або прибрати, 
-                   якщо хочете *тільки* сортування за жанрами) 
-                */}
+                
                   <div className="bg-blue pt-12 pb-4"> 
                     <div className="container mx-auto px-4"> 
                       <PopularBooks 
@@ -352,7 +377,7 @@ useEffect(()=>{
 
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/library" element={<LibraryPage />} />
-            <Route path="/books/:bookId" element={<BookDetailPage />} />
+            <Route path="/books/:bookId" element={<BookDetailPage onAddToCart={handleAddToCart} />} />
             <Route path="/orders" element={<OrderPage />} />
             <Route path="/cart" element={<CartPage />} />
             

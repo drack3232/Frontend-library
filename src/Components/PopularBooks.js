@@ -8,7 +8,7 @@ const API_URL = "http://localhost:5000";
 // АЛЕ він не знає, які книги в бібліотеці.
 // Тому App.js має передати йому стан `wishlist` та функцію `onToggleWishlist`
 
-const PopularBooks = ({ wishlist, onToggleWishlist }) => {
+const PopularBooks = ({ wishlist, onToggleWishlist, onAddToCart }) => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -53,6 +53,7 @@ const PopularBooks = ({ wishlist, onToggleWishlist }) => {
             book={book}
             isBookInWishlist={wishlist.has(book.id)}
             onToggleWishlist={onToggleWishlist}
+            onAddToCart={onAddToCart}
           />
         ))}
       </div>

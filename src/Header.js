@@ -73,6 +73,14 @@ const IconHeart = () => (
     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
   </svg>
 );
+const IconTrash = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="3 6 5 6 21 6"></polyline>
+    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+    <line x1="10" y1="11" x2="10" y2="17"></line>
+    <line x1="14" y1="11" x2="14" y2="17"></line>
+  </svg>
+);
 // === КІНЕЦЬ ІКОНОК ===
 
 
@@ -81,6 +89,7 @@ const Header = ({
   onRegisterClick, 
   cartItems,
   cartTotal,
+  onRemoveFromCart,
   cartItemCount,
   userName,   
   theme, 
@@ -94,6 +103,7 @@ const Header = ({
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [isCartModalOpen, setCartModalOpen] = useState(false);
+  
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -209,18 +219,7 @@ const Header = ({
                             <span>Профіль</span>
                           </Link>
                         </li>
-                        {/* // 🔽🔽🔽 ПУНКТ "ПОВІДОМЛЕННЯ" ВИДАЛЕНО 🔽🔽🔽
-                        <li>
-                          <Link to="/notifications">
-                            <IconBell />
-                            <span>Повідомлення</span>
-                            {notificationCount > 0 && (
-                              <span className="dropdown-badge">{notificationCount}</span>
-                            )}
-                          </Link>
-                        </li>
-                        // 🔼🔼🔼 🔼🔼🔼 🔼🔼🔼
-                        */}
+                    
                         <li>
                           <Link to="/orders">
                             <IconBox />
@@ -290,10 +289,14 @@ const Header = ({
                 <p>Ваш кошик порожній.</p>
               ) : (
                 <ul className="cart-items-list">
-                  {cartItems.map(item => (
+                  {cartItems.map(item => {
+                     const price = parseFloat(item.price) || 0
+                      const quantity = parseInt(item.quantity, 10) || 1
+                      const itemTotal = price * quantity
+                      return(
                     <li key={item.id} className="cart-item">
                       <img 
-                        src={item.image || 'https://placehold.co/60x90/f7f7f7/aaa?text=Book'}
+                        src={item.cover_url || 'https://placehold.co/60x90/f7f7f7/aaa?text=Book'}
                         alt={item.title} 
                         className="cart-item-image" 
                       />
@@ -301,17 +304,25 @@ const Header = ({
                         <h4>{item.title}</h4>
                         <p>Кількість: {item.quantity}</p>
                       </div>
-                      <span className="cart-item-price">{item.price * item.quantity} грн</span>
+                     
+                       <div className="cart-item-controls">
+                      <span className="cart-item-price">{itemTotal.toFixed(2)} грн</span>
+                      <button className="cart-item-remove-button" title="Видалити" onClick = {() => onRemoveFromCart(item.id)} > 
+                        
+                          
+                          <IconTrash />
+                          </button>
+                          </div>
                     </li>
-                  ))}
+)})}
                 </ul>
               )}
               <br/>
               <h3>Акційні пропозиції</h3>
               <p>Тут ваші акційні пропозиції...</p>
             </div>
-            <div className="modal-footer">
-              <span>Разом: <strong>{cartTotal} грн</strong></span>
+            <div className="cart-modal-footer">
+              <span>Разом: <strong>{cartTotal ? cartTotal.toFixed(2) : '0.00'} грн</strong></span>
               <button className="checkout-button">
                 Продовжити &rarr;
               </button>

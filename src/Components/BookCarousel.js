@@ -1,7 +1,7 @@
 import React from 'react';
 import BookCard from './BookCard'; // Ми перевикористовуємо нашу картку
 
-const BookCarousel = ({ title, books, wishlist, onToggleWishlist }) => {
+const BookCarousel = ({ title, books, wishlist, onToggleWishlist, onAddToCart }) => {
   // Не показувати секцію, якщо в ній немає книг
   if (!books || books.length === 0) {
     return null;
@@ -22,6 +22,7 @@ const BookCarousel = ({ title, books, wishlist, onToggleWishlist }) => {
             book={book}
             isBookInWishlist={wishlist.has(book.id)}
             onToggleWishlist={onToggleWishlist}
+            onAddToCart={onAddToCart}
           />
         ))}
 

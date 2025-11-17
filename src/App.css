@@ -5,7 +5,7 @@ html, body, #root {
   width: 100%;
   height: 100%;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background-color: #f4f4f4; /* Сірий фон для всього сайту */
+  /* background-color: #f4f4f4; Сірий фон для всього сайту */
 }
 
 #root {
@@ -46,7 +46,8 @@ h1 {
   top: 0;
   z-index: 1000;
   width: 100%;
-  padding: 15px 0;
+  padding: 4px 0;
+  margin: -40px 0;
   background: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -477,11 +478,11 @@ h1 {
 .profile-button {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   background-color: #f0f2f5;
   border: none;
-  border-radius: 20px;
-  padding: 8px 15px; /* Зробив трохи більшим */
+  border-radius: 8px;
+  padding: 2px 4px; /* Зробив трохи більшим */
   cursor: pointer;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 1rem;
@@ -959,8 +960,8 @@ h1 {
   color: #333;
 }
 .profile-icon-wrapper svg {
-  width: 28px;
-  height: 28px;
+  width: 23px;
+  height: 23px;
 }
 
 /* Значок "15" на іконці профілю */
@@ -972,7 +973,7 @@ h1 {
   color: #000;
   font-weight: bold;
   border-radius: 50%;
-  padding: 2px 5px;
+  padding: 2px 4px;
   font-size: 10px;
   line-height: 1;
   border: 1px solid #fff;
@@ -987,22 +988,25 @@ h1 {
   line-height: 1.3;
 }
 .profile-button-text span {
-  font-size: 12px;
+  font-size: 0px;
   color: #555;
-  text-transform: uppercase; /* Робить 'ARTEM' великими */
+  text-transform: uppercase;
 }
 .profile-button-text strong {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: #000;
 }
 
 /* Стрілка (шеврон) */
 .profile-chevron {
-  margin-left: 8px;
+  margin-left: 2px;
   color: #555;
   transition: transform 0.2s;
 }
+
+
+
 .profile-chevron.open {
   transform: rotate(180deg);
 }
@@ -1320,4 +1324,312 @@ h1 {
 .book-card-cart-button svg {
   width: 22px;
   height: 22px;
+}
+/* стилі для кнопки зміни теми і її правила */
+.theme-button {
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ background: none;
+ border: none;
+ color: #333;
+ cursor: pointer;
+ padding: 8px;
+ border-radius: 50%;
+ transition: background-color 0.2s, color 0.2s;
+}
+
+.theme-button:hover {
+ background-color:#FDE003;
+}
+.theme-button svg {
+ width: 22px; 
+ height: 22px;
+}
+body.dark {
+ background-color: #121212;
+ color: #e0e0e0;
+}
+body.dark .theme-button{
+  background: #292c29;
+ 
+}
+body.dark .theme-button:hover{
+  background: #FDE003;
+ 
+}
+body.dark .app-layout {
+ background-color: #121212;
+}
+
+/* === Картки, секції, хедер, футер === */
+body.dark .app-header {
+ background: #1e1e1e;
+ border-bottom: 1px solid #333;
+ box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+body.dark .page-section,
+body.dark .portfolio-section,
+body.dark .search-content-card,
+body.dark .wishlist-content-card,
+body.dark .profile-card,
+body.dark .form-section {
+ background-color: #1e1e1e;
+ border-bottom: 1px solid #333;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+body.dark .admin-section {
+  background-color: #121212; /* Залишимо фон сторінки */
+}
+
+/* === Текст === */
+body.dark .logo,
+body.dark .main-nav a,
+body.dark h1, body.dark h2, body.dark h3, body.dark h4,
+body.dark .search-title,
+body.dark .wishlist-title,
+body.dark .book-card-title,
+body.dark .book-card-price .current-price,
+body.dark .profile-button-text strong,
+body.dark .dropdown-content li a,
+body.dark .dropdown-content li button,
+body.dark .cart-modal-header h2,
+body.dark .cart-item-details h4,
+body.dark .cart-item-price,
+body.dark .profile-card h1,
+body.dark .profile-section h2,
+body.dark .profile-details strong {
+ color: #f5f5f5;
+}
+
+body.dark .book-card-author,
+body.dark .book-card-rating,
+body.dark .book-card-price .original-price,
+body.dark .profile-button-text span,
+body.dark .profile-chevron,
+body.dark .wishlist-icon-link,
+body.dark .cart-icon-link,
+body.dark .theme-toggle-button,
+body.dark .profile-details p,
+body.dark .profile-placeholder,
+body.dark .cart-item-details p,
+body.dark .loading-text,
+body.dark .empty-wishlist-message p,
+body.dark .empty-search-placeholder p {
+ color: #aaa;
+}
+
+/* === Інтерактивні елементи === */
+body.dark .search-input-header {
+ background-color: #333;
+ border-color: #555;
+ color: #f5f5f5;
+}
+body.dark .search-input-header:focus {
+  border-color: #FDC72A;
+  background-color: #222;
+  box-shadow: 0 0 0 3px rgba(253, 199, 42, 0.3);
+}
+
+body.dark .btn-login,
+body.dark .btn-outline {
+  background: #333;
+  border-color: #555;
+  color: #f5f5f5;
+}
+body.dark .btn-login:hover {
+  background: #444;
+  border-color: #666;
+}
+body.dark .btn-outline {
+  border-color: #f25a38;
+  color: #f25a38;
+}
+body.dark .btn-outline:hover {
+  background-color: #f25a38;
+  color: white;
+}
+
+/* === Картка книги (Головне виправлення) === */
+body.dark .book-card-container {
+ background: #2a2a2a;
+ box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+body.dark .book-card-container:hover {
+ box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+body.dark .book-card-image-wrapper::after {
+  background: #3a3a3a;
+  box-shadow: inset 0 0 2px rgba(0,0,0,0.1), -1px 0 1px rgba(100,100,100,0.1);
+}
+body.dark .book-card-image-wrapper::before {
+  opacity: 0.3;
+}
+body.dark .book-card-wishlist-button {
+ background-color: #333;
+ border-color: #555;
+ color: #f5f5f5;
+}
+body.dark .book-card-wishlist-button:hover {
+  background-color: #444;
+}
+body.dark .book-card-wishlist-button.wished {
+ color: #ff4757; 
+background-color: #444;
+}
+body.dark .book-card-wishlist-button.wished .icon-heart {
+ fill: #ff4757;
+ stroke: #ff4757;
+}
+
+body.dark .profile-button:hover {
+background-color: #333;
+}
+body.dark .dropdown-content {
+background-color: #2a2a2a;
+border-color: #444;
+}
+body.dark .dropdown-content li {
+border-bottom-color: #444;
+}
+body.dark .dropdown-content li a,
+body.dark .dropdown-content li button {
+color: #f5f5f5;
+}
+body.dark .dropdown-content li a:hover,
+body.dark .dropdown-content li button:hover {
+background-color: #3a3a3a;
+}
+body.dark .dropdown-content li svg {
+color: #aaa;
+}
+body.dark .logout-item button,
+body.dark .logout-item button svg {
+color: #e57373; /* Світліший червоний */
+}
+body.dark .logout-item button:hover {
+background-color: #4a3a3a;
+}
+
+/* === Меню профілю === */
+body.dark .profile-button:hover {
+ background-color: #333;
+}
+body.dark .dropdown-content .book-cover-container {
+ background-color: #2a2a2a;
+ border-color: #444;
+}
+body.dark .book-card{
+  background: #2a2a2a;
+}
+body.dark .dropdown-content li {
+  border-bottom-color: #444;
+}
+body.dark .dropdown-content li a:hover,
+body.dark .dropdown-content li button:hover {
+ background-color: #3a3a3a;
+}
+body.dark .dropdown-content li svg {
+  color: #aaa;
+}
+body.dark .logout-item button,
+body.dark .logout-item button svg {
+ color: #e57373; /* Світліший червоний */
+}
+body.dark .logout-item button:hover {
+  background-color: #4a3a3a;
+}
+
+/* === Модальне вікно (логін) === */
+body.dark .modal-content {
+  background: #2a2a2a;
+}
+body.dark .modal-content input {
+  background: #333;
+  border-color: #555;
+  color: #f5f5f5;
+}
+body.dark .btn-close {
+  color: #777;
+}
+body.dark .btn-close:hover {
+  color: #f5f5f5;
+}
+
+/* === Модальне вікно (кошик) === */
+body.dark .cart-modal-content {
+  background: #2a2a2a;
+}
+body.dark .cart-modal-header,
+body.dark .cart-modal-tabs,
+body.dark .cart-item {
+  border-bottom-color: #444;
+}
+body.dark .cart-modal-footer {
+  background-color: #1e1e1e;
+  border-top-color: #444;
+}
+body.dark .cart-close-button {
+  color: #777;
+}
+body.dark .cart-close-button:hover {
+  color: #f5f5f5;
+}
+body.dark .cart-modal-tabs a {
+  color: #888;
+}
+body.dark .cart-modal-tabs .tab-active {
+  color: #f5f5f5;
+}
+body.dark .cart-item-remove-button {
+  color: #777;
+}
+body.dark .cart-item-remove-button:hover {
+  color: #e57373;
+}
+body.dark .cart-promo-text {
+  color: #888;
+}
+
+/* === Футер === */
+body.dark .app-footer {
+  background: #1e1e1e;
+  color: #777;
+}
+body.dark .social-links a {
+  color: #aaa;
+}
+body.dark .social-links a:hover {
+  color: #f5f5f5;
+}
+
+/* === Інші Сторінки === */
+body.dark .profile-section {
+  border-top-color: #444;
+}
+body.dark .characteristics-table td {
+  border-bottom-color: #444;
+}
+body.dark .review-card {
+  border-bottom-color: #444;
+}
+body.dark .purchase-box {
+  background-color: #2a2a2a;
+  border-color: #444;
+}
+body.dark .cart-summary {
+  background-color: #2a2a2a;
+  border-color: #444;
+}
+body.dark .cart-summary h2 {
+  border-bottom-color: #555;
+}
+body.dark .cart-summary-total {
+  border-top-color: #555;
+}
+body.dark .cart-items-list-fullpage {
+  background: #2a2a2a;
+}
+body.dark .cart-items-list-fullpage .cart-item {
+  border-bottom-color: #444;
 }

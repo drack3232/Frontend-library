@@ -29,10 +29,10 @@ function App() {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [wishlist, setWishlist] = useState(new Set());
-  // (ВИДАЛЕНО: 'groupedBooks' useState)
   const [cartItems, setCartItems] = useState([]);
   const [userName, setUserName] = useState("ARTEM");
   const [allBooks, setAllBooks] = useState([]);
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');// localStorage
 
   const API_URL = "http://localhost:5000";
 
@@ -141,11 +141,15 @@ function App() {
     }
   };
 
+const toggleTheme = () => {
+    setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
+  }
+
   const addBook = async () => {
     if (!newBook.title || !newBook.author) return alert("Заповніть назву та автора");
     try {
       await axios.post(`${API_URL}/books`, newBook);
-      fetchAllBooks(); // 👈 Оновлюємо всі книги (це також оновить каруселі)
+      fetchAllBooks(); 
       setNewBook({ title: "", author: "" });
     } catch (err) {
       console.error("Помилка додавання:", err);
@@ -200,12 +204,17 @@ function App() {
     }
   };
 
+  // === useEffect дял зміни теми ===
+useEffect(()=>{
+  document.body.className = theme;
+  localStorage.setItem('theme', theme);
+},[theme])
   // === useEffect ===
   useEffect(() => {
     fetchWishlist();
-    fetchAllBooks(); // 👈 Завантажуємо ВСІ книги
+    fetchAllBooks(); 
     fetchCartItems();
-    // (fetchGroupedBooks видалено)
+    
   }, []);
 
 
@@ -256,6 +265,8 @@ function App() {
           cartItems={cartItems}
           cartTotal={cartTotal}
           userName={userName}
+          theme={theme}
+          toggleTheme={toggleTheme}
         />
 
         <main className="main-content flex-grow">
@@ -275,7 +286,7 @@ function App() {
                    ви можете її залишити або прибрати, 
                    якщо хочете *тільки* сортування за жанрами) 
                 */}
-                  <div className="bg-white pt-12 pb-4"> 
+                  <div className="bg-blue pt-12 pb-4"> 
                     <div className="container mx-auto px-4"> 
                       <PopularBooks 
                         wishlist={wishlist}
@@ -287,10 +298,11 @@ function App() {
 
                 {/* === ОСНОВНА СЕКЦІЯ З ЖАНРАМИ === */}
                 {/* Вона автоматично створить карусель для КОЖНОГО жанру з allBooks */}
-                  <div className="bg-white pt-8 pb-12"> 
-                    <div className="container mx-auto px-4"> 
+                  
                       {Object.keys(groupedBooks).length > 0 ? (
                         Object.entries(groupedBooks).map(([genre, booksInGenre]) => (
+ < div className="bg-white pt-8 pb-12"> 
+                    <div className="container mx-auto px-4"> 
                           <BookCarousel
                             key={genre}
                             title={genre}
@@ -299,12 +311,13 @@ function App() {
                             onToggleWishlist={handleToggleWishlist}
                             onAddToCart={handleAddToCart}
                           />
+</div>
+</div>
                         ))
                       ) : (
                         <div className="text-center py-10">🔄 Завантаження секцій...</div>
                       )}
-                    </div>
-                  </div>
+                   
 
                   <div className="py-12">
                     <div className="container mx-auto px-4">

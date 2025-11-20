@@ -282,7 +282,6 @@ const Header = ({
             </div>
             <div className="modal-tabs">
               <a href="#" className="tab-active">Фізичні товари ({cartItems.length})</a>
-              <a href="#" className="tab-inactive">Електронні товари</a>
             </div>
             <div className="modal-body">
               {cartItems.length === 0 ? (
@@ -318,11 +317,11 @@ const Header = ({
                 </ul>
               )}
               <br/>
-              <h3>Акційні пропозиції</h3>
-              <p>Тут ваші акційні пропозиції...</p>
+              {/* <h3>Акційні пропозиції</h3>
+              <p>Тут ваші акційні пропозиції...</p> */}
             </div>
             <div className="cart-modal-footer">
-              <span>Разом: <strong>{cartTotal ? cartTotal.toFixed(2) : '0.00'} грн</strong></span>
+              <span className="total-price-badge">Разом: <strong>{cartTotal ? cartTotal.toFixed(2) : '0.00'} грн</strong></span>
               <button className="checkout-button">
                 Продовжити &rarr;
               </button>

@@ -18,6 +18,12 @@ import BookCarousel from './Components/BookCarousel';
 import SearchResultsPage from './Components/SearchResultsPage';
 import CartPage from "./Components/CartPage";
 import WishlistPage from "./Components/WishlistPage";
+import { 
+  getBooksFromCache, saveBooksToCache,
+  getCartFromCache, saveCartToCache,
+  getWishlistFromCache, saveWishlistToCache 
+} from './dbService';
+import RecentlyViewed from './Components/RecentlyViewed';
  
 // --- Головний компонент App ---
 function App() {
@@ -102,11 +108,20 @@ function App() {
   const fetchWishlist = async () => {
     const token = localStorage.getItem('token');
     if (!token) return; 
+try{
+const cachedIds = await getWishlistFromCache();
+console.log('💖 Wishlist з кешу:', cachedIds);
+        setWishlist(new Set(cachedIds));
+      }catch(e){console.log(e)}
+
     try {
       const res = await axios.get(`${API_URL}/api/wishlist`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
+
       setWishlist(new Set(res.data));
+await saveWishlistToCache(res.data);
+
     } catch (error) {
       console.error('Не вдалося завантажити список бажаного:', error);
     }
@@ -116,11 +131,34 @@ function App() {
 
   const fetchAllBooks = async () => {
     try {
-      const res = await axios.get(`${API_URL}/books`);
-      setAllBooks(res.data);
-    } catch (err) {
-      console.error("Помилка завантаження всіх книг:", err);
-    }
+      console.time('⏱️ Час читання з IndexedDB'); 
+      const cachedBooks = await getBooksFromCache();
+      console.timeEnd('⏱️ Час читання з IndexedDB');
+
+      if (cachedBooks && cachedBooks.length > 0) {
+        console.log(`📦 Знайдено ${cachedBooks.length} книг у кеші. Відображаємо миттєво!`);
+        setAllBooks(cachedBooks); // Малюємо інтерфейс одразу
+        setLoading(false); // Прибираємо спінер
+      }
+    } catch (err) {
+      console.warn("Кеш пустий або помилка читання:", err);
+    }
+
+    try {
+      console.log('🌍 Запит на сервер за оновленнями...');
+      const res = await axios.get(`${API_URL}/books`);
+      
+     
+      setAllBooks(res.data); 
+      setLoading(false);
+
+      await saveBooksToCache(res.data);
+      console.log('💾 Кеш успішно оновлено!');
+
+    } catch (err) {
+      console.error("❌ Сервер недоступний:", err);
+  
+    }
   };
 
   const fetchCartItems = async () => {
@@ -130,14 +168,28 @@ function App() {
       setCartItems([]);
       return;
     }
+try {
+  const cachedCart = await getCartFromCache();
+      if (cachedCart.length > 0) {
+        console.log('🛒 Кошик з кешу:', cachedCart.length);
+        setCartItems(cachedCart);
+      }
+} catch (e) {
+  console.log(e)
+}
     try {
       const res = await axios.get(`${API_URL}/cart/${userId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      setCartItems(res.data); 
+if (Array.isArray(res.data)) {
+        setCartItems(res.data); 
+        await saveCartToCache(res.data);
+      } else {
+        console.warn("⚠️ Сервер повернув дивні дані. Ігноруємо і залишаємо те, що в кеші.");
+      }
     } catch (err) {
-      console.error("Failed to fetch cart items:", err);
-      setCartItems([]);
+      console.error("❌ Помилка сервера:", err.message);
+//       setCartItems([]);
     }
   };
 
@@ -156,7 +208,7 @@ const toggleTheme = () => {
     }
   };
 
-// === ВСТАВ ЦЕЙ КОД В App.js ===
+
 
 const handleRemoveFromCart = async (bookId) => {
   const token = localStorage.getItem('token');
@@ -225,7 +277,7 @@ const handleRemoveFromCart = async (bookId) => {
       }, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      fetchCartItems(); // Оновлюємо кошик
+      fetchCartItems(); 
     } catch (error) {
       console.error('Не вдалося додати товар у кошик:', error);
     }
@@ -236,7 +288,7 @@ useEffect(()=>{
   document.body.className = theme;
   localStorage.setItem('theme', theme);
 },[theme])
-  // === useEffect ===
+
   useEffect(() => {
     fetchWishlist();
     fetchAllBooks(); 
@@ -248,20 +300,25 @@ useEffect(()=>{
   // === РОЗРАХУНКИ СТАНУ ===
   const cartItemCount = cartItems.length;
   const cartTotal = useMemo(() => {
-    return cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+   return cartItems.reduce((acc, item) => {
+    
+      const price = parseFloat(item.price) || 0;
+      
+     
+      const quantity = parseInt(item.quantity) || 1; 
+      
+      return acc + (price * quantity);
+    }, 0);
   }, [cartItems]);
 
   // === НОВИЙ useMemo ДЛЯ ГРУПУВАННЯ КНИГ ===
-  // Це автоматично групує всі книги за жанром
   const groupedBooks = useMemo(() => {
     if (allBooks.length === 0) {
       return {};
     }
-    
-    // 1. Групуємо книги в об'єкт
     const groups = {};
     allBooks.forEach(book => {
-      // Використовуємо "Інше" якщо жанр не вказано
+      
       const genre = book.genre || "Інше"; 
       if (!groups[genre]) {
         groups[genre] = [];
@@ -319,14 +376,19 @@ useEffect(()=>{
                         onAddToCart={handleAddToCart}
                       />
                     </div>
+            <RecentlyViewed 
+                     wishlist={wishlist}
+                     onToggleWishlist={handleToggleWishlist}
+                     onAddToCart={handleAddToCart}
+                  />
                   </div>
 
                 {/* === ОСНОВНА СЕКЦІЯ З ЖАНРАМИ === */}
-                {/* Вона автоматично створить карусель для КОЖНОГО жанру з allBooks */}
+                
                   
                       {Object.keys(groupedBooks).length > 0 ? (
                         Object.entries(groupedBooks).map(([genre, booksInGenre]) => (
- < div className="bg-white pt-8 pb-12"> 
+ < div key={genre} className="bg-white pt-8 pb-12"> 
                     <div className="container mx-auto px-4"> 
                           <BookCarousel
                             key={genre}

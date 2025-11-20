@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 // === ІКОНКИ ===
@@ -79,6 +80,7 @@ const IconNewBadge = () => (
 
 
 const BookCard = ({ book, isWished, onToggleWishlist, onAddToCart }) => {
+  const [imgError, setImgError] = useState(false);
   // Забезпечуємо значення за замовчуванням
   const { 
     id, 
@@ -89,9 +91,12 @@ const BookCard = ({ book, isWished, onToggleWishlist, onAddToCart }) => {
     reviewCount = 0, 
     price = 0, 
     discountPrice,
-    isNew = false // Додаємо прапорець "новинка"
+    isNew = false 
   } = book;
-
+  const placeholderImg = "https://placehold.co/300x450/374151/FFFFFF?text=No+Image";
+ const imageSrc = !imgError && book.cover_url 
+    ? book.cover_url 
+    : placeholderImg;
   // Вираховуємо, чи є знижка
   const hasDiscount = typeof discountPrice === 'number' && discountPrice < price;
   const finalPrice = hasDiscount ? discountPrice : price;
@@ -129,9 +134,11 @@ const BookCard = ({ book, isWished, onToggleWishlist, onAddToCart }) => {
         <div className="book-card-image-wrapper">
           {/* 1. Зображення книги */}
           <img 
-            src={imageUrl || 'https://placehold.co/250x380/f0f0f0/aaa?text=Book'} 
+            src={imageSrc || 'https://placehold.co/250x380/f0f0f0/aaa?text=Book'} 
             alt={title} 
             className="book-card-image" 
+
+            oonError={() => setImgError(true)}
           />
           
           {/* 2. Значок "Новинка" */}

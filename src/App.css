@@ -261,10 +261,49 @@ h1 {
 /* ==================== СІТКА І КАРТКИ КНИГ ==================== */
 .books-grid {
   display: grid;
+  flex-wrap: wrap;
   grid-template-columns: repeat(5, 1fr);
-  gap: 30px;
-  padding-bottom: 40px;
+  gap: 22px;
+  padding-bottom: 30px;
+  padding: 20px 0;
+  justify-content: flex-start !important;
+   justify-content: flex-start !important;
+     width: 100%; 
 }
+
+
+.wishlist-page-padding {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.wishlist-content-card {
+ max-width: 100%;
+  max-width: 1200px;
+  margin: 0 auto; /* Центруємо сам блок на екрані */
+  padding: 0 16px; /* Невеликі відступи від країв екрану */
+  box-sizing: border-box;
+}
+
+.wishlist-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  color: white; /* Або твій колір тексту */
+}
+
+.empty-wishlist-message {
+  text-align: center;
+  padding: 4rem 0;
+  color: #9ca3af;
+}
+
+.empty-message-lg {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
 .book-card-link {
   text-decoration: none;
   color: inherit;
@@ -789,7 +828,7 @@ h1 {
   flex-shrink: 0;
 }
 .checkout-button {
-  background-color: #9fca36;
+  background-color: #e74c3c;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -798,10 +837,41 @@ h1 {
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
+  float: right;
 }
 .checkout-button:hover {
-  background-color: #8ab02f;
+  background-color: #c0392b; 
 }
+.total-price-badge{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #FFF1F0;
+  border: 1px solid #FF5733;
+
+  border-radius: 10px;
+  padding:8px 16px ;
+  margin-right: 15px;
+
+font-family: 'Segoe UI', sans-serif;
+font-size: 16px;
+font-weight: 600;
+color: #C0392B;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+
+}
+.total-price-badge strong {
+  color: #B91C1C; /* Ще темніший червоний */
+  font-size: 14px;
+}
+.total-price-badge strong,
+.total-price-badge b{
+  color: #2c3e50;
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -1115,6 +1185,15 @@ h1 {
   /* Встановлюємо співвідношення сторін (напр. 3:4) */
   padding-top: 150%; /* 380 / 250 = 1.52 */
   background-color: #f0f0f0;
+}
+
+
+@media (max-width: 768px) {
+  .cart-modal-footer {
+    width: 100%;
+    justify-content: space-between; /* Розсунути по краях на телефоні */
+    margin-top: 10px;
+  }
 }
 
 .book-card-image {
@@ -1622,4 +1701,31 @@ body.dark .cart-items-list-fullpage {
 }
 body.dark .cart-items-list-fullpage .cart-item {
   border-bottom-color: #444;
+}
+/* 🔥 ГОРИЗОНТАЛЬНИЙ СКРОЛ ДЛЯ ІСТОРІЇ */
+.horizontal-scroll-container {
+  display: flex;
+  gap: 24px; 
+  overflow-x: auto; 
+  scroll-behavior: smooth;
+  padding: 10px 4px; 
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.horizontal-scroll-container::-webkit-scrollbar {
+  height: 8px;
+}
+.horizontal-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+.horizontal-scroll-container::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 20px;
+}
+
+/* Фіксація ширини картки в каруселі */
+.scroll-item {
+  flex: 0 0 auto;
+  width: 280px;   
 }

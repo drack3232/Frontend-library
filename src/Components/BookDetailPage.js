@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { getBooksFromCache } from '../dbService';
+import RecentlyViewed from './RecentlyViewed';
 
 const API_URL = "http://localhost:5000";
 
@@ -11,22 +13,49 @@ const BookDetailPage = ({ onAddToCart }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [bookResponse, reviewsResponse] = await Promise.all([
-          axios.get(`http://localhost:5000/books/${bookId}`),
-          axios.get(`http://localhost:5000/books/${bookId}/reviews`)
-        ]);
-        setBook(bookResponse.data);
-        setReviews(reviewsResponse.data);
-      } catch (error) {
-        console.error("Помилка завантаження даних:", error);
-      } finally {
+  
+        fetchBook();
+  }, [bookId]);
+
+const fetchBook = async () => {
+    setLoading(true);
+    let foundInCache = false; // Прапорець, чи знайшли ми щось у кеші
+
+    // ЕТАП 1: КЕШ
+    try {
+      const cachedBooks = await getBooksFromCache();
+      // Використовуємо == бо bookId це рядок, а id може бути числом
+      const foundBook = cachedBooks.find(b => b.id == bookId);
+
+      if (foundBook) {
+        console.log('📖 Книгу знайдено в кеші!');
+        setBook(foundBook);
+        setLoading(false); // Показуємо контент одразу
+        foundInCache = true;
+      }
+    } catch (err) {
+      console.log('Помилка читання кешу:', err);
+    }
+
+    // ЕТАП 2: СЕРВЕР
+    try {
+      const response = await axios.get(`${API_URL}/books/${bookId}`);
+      setBook(response.data);
+      setLoading(false); // Оновлюємо і вимикаємо спінер
+      
+      // Тут можна було б окремо завантажити відгуки, якщо вони не приходять з книгою
+      // const reviewsResponse = await axios.get(...);
+      // setReviews(reviewsResponse.data);
+
+    } catch (err) {
+      console.error('Сервер недоступний:', err);
+      
+      // ВАЖЛИВО: Якщо в кеші не знайшли І сервер впав — вимикаємо спінер, щоб показати помилку
+      if (!foundInCache) {
         setLoading(false);
       }
-    };
-    fetchData();
-  }, [bookId]);
+    }
+  };
 
   const handleAddToCart = async () => { 
     const token = localStorage.getItem('token');
@@ -41,16 +70,13 @@ const BookDetailPage = ({ onAddToCart }) => {
       // 2. Відправляємо запит на бекенд
       await axios.post(
         `${API_URL}/cart/add`, 
-        { bookId: book.id }, // Відправляємо ID книги
-        { headers: { 'Authorization': `Bearer ${token}` } } // З токеном
+        { bookId: book.id }, 
+        { headers: { 'Authorization': `Bearer ${token}` } } 
       );
       
       // 3. Повідомляємо про успіх
       alert("Книгу успішно додано в кошик!"); 
       
-      // 4. (Опціонально) Можна змінити вигляд кнопки
-      // setAddedToCart(true); 
-
     } catch (error) {
       console.error("Помилка додавання в кошик:", error);
     
@@ -58,8 +84,41 @@ const BookDetailPage = ({ onAddToCart }) => {
     onAddToCart(book);
    };
 
+   useEffect(() => {
+    if (book && book.id) {
+      try {
+        // Читаємо стару історію
+        const stored = sessionStorage.getItem('recentlyViewed');
+        let history = stored ? JSON.parse(stored) : [];
+        
+        // Видаляємо дублікат цієї ж книги
+        history = history.filter(item => Number(item.id) !== Number(book.id)); 
+        
+        // Додаємо поточну книгу на початок
+        history.unshift({ 
+            id: book.id, 
+            title: book.title, 
+            cover_url: book.cover_url, 
+            price: book.price,
+            author: book.author 
+        });
+
+        // Обмежуємо до 5 штук
+        if (history.length > 5) history = history.slice(0, 5); 
+        
+        // Зберігаємо назад у браузер
+        sessionStorage.setItem('recentlyViewed', JSON.stringify(history));
+        console.log("✅ Історія оновлена:", history); // Лог для перевірки
+
+      } catch (error) {
+        console.error("Помилка запису історії:", error);
+      }
+    }
+  }, [book]);
+
   if (loading) { return <div className="loading">🔄 Завантаження...</div>; }
   if (!book) { return <div className="container"><h2>Книгу не знайдено.</h2></div>; }
+  
 
   return (
     <div className="book-detail-page">

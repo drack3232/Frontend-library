@@ -29,13 +29,12 @@ const WishlistPage = ({
         
         {wishedBooks.length > 0 ? (
           // ВИПРАВЛЕНО: Використовуємо клас .books-grid
-          <div className="books-grid">
+          <div className="books-grid ">
             {wishedBooks.map(book => (
               <BookCard
                 key={book.id}
                 book={book}
-                // isWished тут завжди true,
-                // оскільки це сторінка списку бажаних
+            
                 isWished={true} 
                 onToggleWishlist={onToggleWishlist}
                 onAddToCart={onAddToCart} // 👈 Передаємо його сюди

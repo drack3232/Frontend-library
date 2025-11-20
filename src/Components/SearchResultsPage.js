@@ -3,13 +3,15 @@ import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 // Використовуємо .js, як у вашому прикладі
 import BookCard from './BookCard.js'; 
+import App from '../App.js';
 
 const API_URL = "http://localhost:5000";
 
 const SearchResultsPage = ({ 
   wishlist, 
   onToggleWishlist, 
-  onAddToCart
+  onAddToCart,
+  allBooks=[]
 }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,21 +19,30 @@ const SearchResultsPage = ({
   const [searchParams] = useSearchParams();
   const query = searchParams.get('query');
 
+
+
+
   useEffect(() => {
-    // Повертаємо вашу логіку пошуку через API
+   
     const fetchSearchResults = async () => {
       if (!query) { 
         setSearchResults([]);
         setLoading(false);
         return;
       }
+const lowerCaseQuery = query.toLowerCase();
+      
+      const filtered = allBooks.filter(book => {
+          const matchTitle = book.title && book.title.toLowerCase().includes(lowerCaseQuery);
+          const matchAuthor = book.author && book.author.toLowerCase().includes(lowerCaseQuery);
 
+          return matchTitle || matchAuthor;
+      })
       try {
         setLoading(true);
         setError(null);
-        // Робимо запит до вашого бекенд-ендпоінту
         const res = await axios.get(`${API_URL}/books/search`, {
-          params: { q: query } // Передаємо запит як параметр ?q=...
+          params: { q: query } 
         });
         setSearchResults(res.data);
       } catch (err) {
@@ -44,10 +55,9 @@ const SearchResultsPage = ({
     };
 
     fetchSearchResults();
-  }, [query]); // Залежність ТІЛЬКИ від 'query'
+  }, [query]); 
 
   return (
-    // Використовуємо CSS класи, а не Tailwind
     <div className="main-container search-page-container">
       <div className="search-content-card"> 
         <h1 className="search-title">
@@ -72,13 +82,11 @@ const SearchResultsPage = ({
         )}
 
         {!loading && !error && searchResults.length > 0 && (
-          // Використовуємо .books-grid, який стилізується в App.css
           <div className="books-grid">
             {searchResults.map(book => (
               <BookCard
                 key={book.id}
                book={book}
-                // === ЗАЛИШАЄМО ПРАВИЛЬНУ ПЕРЕДАЧУ ПРОПСІВ ===
                 isWished={wishlist.has(book.id)} 
                 onToggleWishlist={onToggleWishlist}
                 onAddToCart={onAddToCart}

@@ -54,6 +54,7 @@ const PopularBooks = ({ wishlist, onToggleWishlist, onAddToCart }) => {
             isBookInWishlist={wishlist.has(book.id)}
             onToggleWishlist={onToggleWishlist}
             onAddToCart={onAddToCart}
+            isWished={wishlist.has(book.id)}
           />
         ))}
       </div>

@@ -6,7 +6,6 @@ const RecentlyViewed = ({ wishlist, onToggleWishlist, onAddToCart, currentBookId
   const [viewedBooks, setViewedBooks] = useState([]);
 
   useEffect(() => {
-    // 1. Читаємо з браузера
     const storedHistory = sessionStorage.getItem('recentlyViewed');
     
     if (storedHistory) {
@@ -20,7 +19,7 @@ const RecentlyViewed = ({ wishlist, onToggleWishlist, onAddToCart, currentBookId
         setViewedBooks(parsed);
       } catch (e) {
         console.error("❌ Помилка читання історії (сброс):", e);
-        sessionStorage.removeItem('recentlyViewed'); // Очищаємо, якщо дані биті
+        sessionStorage.removeItem('recentlyViewed'); 
       }
     } else {
       console.log("📭 Історія переглядів пуста.");

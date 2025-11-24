@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import BookCard from './BookCard'; // Використовуємо наш існуючий компонент картки
+import BookCard from './BookCard'; 
 
-// Імпортуємо стилі Swiper
 import 'swiper/css';
 import 'swiper/css/navigation';
 
@@ -13,7 +12,7 @@ const GenreSlider = ({ genre }) => {
   useEffect(() => {
     const fetchBooksByGenre = async () => {
       try {
-        // Робимо запит, додаючи жанр як параметр
+       
         const res = await axios.get(`http://localhost:5000/books?genre=${genre}`);
         setBooks(res.data);
       } catch (error) {
@@ -21,19 +20,18 @@ const GenreSlider = ({ genre }) => {
       }
     };
     fetchBooksByGenre();
-  }, [genre]); // Ефект спрацює, якщо зміниться жанр
+  }, [genre]); 
 
   if (books.length === 0) {
-    return null; // Якщо книг немає, нічого не показуємо
+    return null; 
   }
 
   return (
     <div className="container genre-slider-container">
       <h2>{genre}</h2>
       <Swiper
-        spaceBetween={20} // Відстань між слайдами
-        slidesPerView={'auto'} // Автоматично визначати кількість видимих слайдів
-        // Налаштування для різної ширини екрана
+        spaceBetween={20} 
+        slidesPerView={'auto'} 
         breakpoints={{
           320: { slidesPerView: 1.5 },
           480: { slidesPerView: 2.5 },

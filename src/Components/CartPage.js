@@ -1,9 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-// === Іконки ===
-// (Ми не можемо імпортувати іконки з Header, 
-// тому для простоти додамо SVG смітника сюди)
+
 const IconTrash = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="3 6 5 6 21 6"></polyline>
@@ -14,13 +12,9 @@ const IconTrash = () => (
 );
 
 
-// Компонент CartPage тепер "чистий" - він отримує все з App.js
 const CartPage = ({ cartItems = [], cartTotal, onRemoveFromCart }) => {
 
-  
-  
   return (
-    // Використовуємо CSS-класи з App.css
     <div className="main-container cart-page-container">
       <h1>Ваш кошик</h1>
 
@@ -34,7 +28,7 @@ const CartPage = ({ cartItems = [], cartTotal, onRemoveFromCart }) => {
       ) : (
         <div className="cart-page-layout">
           
-          {/* Колонка 1: Список товарів */}
+          
           <div className="cart-items-list-fullpage">
             {cartItems.map((item) => {
               const price = parseFloat(item.price) || 0;
@@ -54,7 +48,6 @@ const CartPage = ({ cartItems = [], cartTotal, onRemoveFromCart }) => {
                   </div>
                   <div className="cart-item-controls-fullpage">
                     <p className="cart-item-price">{itemTotal.toFixed(2)} грн</p>
-                    {/* Кнопка видалення тепер підключена */}
                     <button 
                       className="cart-item-remove-button" 
                       onClick={() => onRemoveFromCart(item.id)}
@@ -67,7 +60,6 @@ const CartPage = ({ cartItems = [], cartTotal, onRemoveFromCart }) => {
             })}
           </div>
 
-          {/* Колонка 2: Підсумок */}
           <div className="cart-summary">
             <h2>Підсумок</h2>
             <div className="cart-summary-row">

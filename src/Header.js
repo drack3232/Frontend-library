@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-// === ІКОНКИ (вбудовані SVG для нового дизайну) ===
 const IconProfile = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 25 25" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -9,16 +8,7 @@ const IconProfile = () => (
   </svg>
 );
 
-/*
-// 🔽🔽🔽 ЦЯ ІКОНКА БІЛЬШЕ НЕ ПОТРІБНА 🔽🔽🔽
-const IconBell = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-  </svg>
-);
-// 🔼🔼🔼 🔼🔼🔼 🔼🔼🔼
-*/
+
 const IconSun = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="5"></circle>
@@ -81,8 +71,6 @@ const IconTrash = () => (
     <line x1="14" y1="11" x2="14" y2="17"></line>
   </svg>
 );
-// === КІНЕЦЬ ІКОНОК ===
-
 
 const Header = ({ 
   onLoginClick, 
@@ -93,8 +81,8 @@ const Header = ({
   cartItemCount,
   userName,   
   theme, 
-  toggleTheme        // 👈 Новий пропс
-  // notificationCount  // 👈 ВИДАЛЕНО
+  toggleTheme        
+ 
 }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const token = localStorage.getItem('token');
@@ -193,12 +181,7 @@ const Header = ({
                   >
                     <span className="profile-icon-wrapper">
                       <IconProfile />
-                      {/* // 🔽🔽🔽 ЗНАЧОК ПОВІДОМЛЕНЬ ВИДАЛЕНО 🔽🔽🔽
-                      {notificationCount > 0 && (
-                        <span className="profile-badge">{notificationCount}</span>
-                      )}
-                      // 🔼🔼🔼 🔼🔼🔼 🔼🔼🔼
-                      */}
+                     
                     </span>
                     <div className="profile-button-text">
                       <span>{userName}</span>
@@ -209,7 +192,7 @@ const Header = ({
                     </span>
                   </button>
 
-                  {/* --- НОВЕ ВИПАДАЮЧЕ МЕНЮ --- */}
+                  {/* ---ВИПАДАЮЧЕ МЕНЮ --- */}
                   {isDropdownOpen && (
                     <div className="dropdown-content">
                       <ul>
@@ -272,7 +255,7 @@ const Header = ({
         </div>
       </header>
 
-      {/* --- Модальне вікно кошика (без змін) --- */}
+      {/* --- Модальне вікно кошика  --- */}
       {isCartModalOpen && (
         <div className="modal-overlay" onClick={handleCloseCart}>
           <div className="modal-content" onClick={handleModalContentClick}>
@@ -317,8 +300,6 @@ const Header = ({
                 </ul>
               )}
               <br/>
-              {/* <h3>Акційні пропозиції</h3>
-              <p>Тут ваші акційні пропозиції...</p> */}
             </div>
             <div className="cart-modal-footer">
               <span className="total-price-badge">Разом: <strong>{cartTotal ? cartTotal.toFixed(2) : '0.00'} грн</strong></span>

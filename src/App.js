@@ -2,8 +2,6 @@ import { useEffect, useState, useMemo } from "react";
 import { BrowserRouter, Routes, Route, Link, useParams } from "react-router-dom";
 import axios from "axios";
 import "./App.css";
-
-// === ІМПОРТИ ===
 import Header from "./Header";
 import Footer from "./Components/Footer";
 import Portfolio from "./Components/Portfolio";
@@ -25,7 +23,7 @@ import {
 } from './dbService';
 import RecentlyViewed from './Components/RecentlyViewed';
  
-// --- Головний компонент App ---
+
 function App() {
 
   // === СТАН КОМПОНЕНТА ===
@@ -104,7 +102,7 @@ function App() {
     );
   };
 
-  // === ФУНКЦІЇ API ===
+  
   const fetchWishlist = async () => {
     const token = localStorage.getItem('token');
     if (!token) return; 
@@ -127,7 +125,7 @@ await saveWishlistToCache(res.data);
     }
   };
 
-  // (ВИДАЛЕНО: 'fetchGroupedBooks' - нам це більше не потрібно)
+
 
   const fetchAllBooks = async () => {
     try {
@@ -137,8 +135,8 @@ await saveWishlistToCache(res.data);
 
       if (cachedBooks && cachedBooks.length > 0) {
         console.log(`📦 Знайдено ${cachedBooks.length} книг у кеші. Відображаємо миттєво!`);
-        setAllBooks(cachedBooks); // Малюємо інтерфейс одразу
-        setLoading(false); // Прибираємо спінер
+        setAllBooks(cachedBooks); 
+        setLoading(false); 
       }
     } catch (err) {
       console.warn("Кеш пустий або помилка читання:", err);
@@ -214,7 +212,6 @@ const handleRemoveFromCart = async (bookId) => {
   const token = localStorage.getItem('token');
   const userId = localStorage.getItem('user_id');
   
-  // 1. Перевіряємо ТІЛЬКИ токен. userId з URL прибрали.
   if (!token || !userId) {
     console.error("Користувач не авторизований для видалення");
     return;
@@ -283,7 +280,6 @@ const handleRemoveFromCart = async (bookId) => {
     }
   };
 
-  // === useEffect дял зміни теми ===
 useEffect(()=>{
   document.body.className = theme;
   localStorage.setItem('theme', theme);
@@ -297,7 +293,7 @@ useEffect(()=>{
   }, []);
 
 
-  // === РОЗРАХУНКИ СТАНУ ===
+ 
   const cartItemCount = cartItems.length;
   const cartTotal = useMemo(() => {
    return cartItems.reduce((acc, item) => {
@@ -311,7 +307,6 @@ useEffect(()=>{
     }, 0);
   }, [cartItems]);
 
-  // === НОВИЙ useMemo ДЛЯ ГРУПУВАННЯ КНИГ ===
   const groupedBooks = useMemo(() => {
     if (allBooks.length === 0) {
       return {};
@@ -326,17 +321,17 @@ useEffect(()=>{
       groups[genre].push(book);
     });
     
-    // 2. Сортуємо жанри за алфавітом
+
     const sortedGenres = Object.keys(groups).sort();
     
-    // 3. Створюємо новий відсортований об'єкт
+
     const sortedGroupedBooks = {};
     sortedGenres.forEach(genre => {
       sortedGroupedBooks[genre] = groups[genre];
     });
 
     return sortedGroupedBooks;
-  }, [allBooks]); // 👈 Цей код виконається, коли 'allBooks' завантажаться
+  }, [allBooks]); 
 
   return (
     <BrowserRouter>
@@ -447,7 +442,7 @@ useEffect(()=>{
               path="/wishlist"
               element={
                 <WishlistPage
-                  allBooks={allBooks} // 👈 Передаємо ВСІ книги
+                  allBooks={allBooks} 
                   wishlist={wishlist}
                   onToggleWishlist={handleToggleWishlist}
                   onAddToCart={handleAddToCart}
@@ -462,7 +457,7 @@ useEffect(()=>{
                   wishlist={wishlist}
                   onToggleWishlist={handleToggleWishlist}
                   onAddToCart={handleAddToCart}
-                  allBooks={allBooks} // 👈 Передаємо ВСІ книги
+                  allBooks={allBooks} 
                 />
               }
             />

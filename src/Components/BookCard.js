@@ -2,15 +2,14 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-// === ІКОНКИ ===
-// Іконка сердечка для wishlist (з білим фоном)
+
 const IconHeart = ({ filled = false, onClick }) => (
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
     width="24" height="24" 
     viewBox="0 0 24 24" 
-    fill={filled ? "#ff4757" : "none"} // Червоний, якщо заповнено
-    stroke={filled ? "#ff4757" : "#333"} // Чорний або червоний
+    fill={filled ? "#ff4757" : "none"} 
+    stroke={filled ? "#ff4757" : "#333"} 
     strokeWidth="2" 
     strokeLinecap="round" 
     strokeLinejoin="round"
@@ -21,7 +20,6 @@ const IconHeart = ({ filled = false, onClick }) => (
   </svg>
 );
 
-// Іконка кошика для додавання в кошик
 const IconShoppingCart = () => (
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
@@ -39,13 +37,12 @@ const IconShoppingCart = () => (
   </svg>
 );
 
-// Іконка зірочки для рейтингу (золота)
 const IconStar = () => (
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
     width="20" height="20" 
     viewBox="0 0 24 24" 
-    fill="#FFD700" // Золотий
+    fill="#FFD700" 
     stroke="#FFD700" 
     strokeWidth="2" 
     strokeLinecap="round" 
@@ -56,14 +53,14 @@ const IconStar = () => (
   </svg>
 );
 
-// Іконка "new" (синій прапорець)
+
 const IconNewBadge = () => (
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
     width="32" 
     height="32" 
     viewBox="0 0 24 24" 
-    fill="#007bff" // Синій
+    fill="#007bff" 
     stroke="white"
     strokeWidth="1"
     className="icon-new-badge"
@@ -81,7 +78,6 @@ const IconNewBadge = () => (
 
 const BookCard = ({ book, isWished, onToggleWishlist, onAddToCart }) => {
   const [imgError, setImgError] = useState(false);
-  // Забезпечуємо значення за замовчуванням
   const { 
     id, 
     title = "Назва книги", 
@@ -110,8 +106,6 @@ const BookCard = ({ book, isWished, onToggleWishlist, onAddToCart }) => {
   const handleAddToCartClick = (e) => {
     e.preventDefault(); 
     e.stopPropagation(); 
-    // Передаємо *весь об'єкт* книги, 
-    // щоб App.js мав всю інфу для додавання в кошик
     if (onAddToCart) {
         onAddToCart(book); 
     } else {
@@ -119,20 +113,19 @@ const BookCard = ({ book, isWished, onToggleWishlist, onAddToCart }) => {
     }
   };
 
-  // Створюємо масив зірочок
+
   const stars = [];
   const fullStars = Math.floor(rating);
   for (let i = 0; i < fullStars; i++) {
     stars.push(<IconStar key={`star-${i}`} />);
   }
-  // (Можна додати логіку для напів-зірочок, якщо потрібно)
+ 
 
   return (
     <div className="book-card-container">
       <Link to={`/books/${id}`} className="book-card-link">
         
         <div className="book-card-image-wrapper">
-          {/* 1. Зображення книги */}
           <img 
             src={imageSrc || 'https://placehold.co/250x380/f0f0f0/aaa?text=Book'} 
             alt={title} 
@@ -141,14 +134,12 @@ const BookCard = ({ book, isWished, onToggleWishlist, onAddToCart }) => {
             oonError={() => setImgError(true)}
           />
           
-          {/* 2. Значок "Новинка" */}
           {isNew && (
             <div className="book-card-new-badge">
               <IconNewBadge />
             </div>
           )}
 
-          {/* 3. Сердечко (Wishlist) */}
           <button 
             className={`book-card-wishlist-button ${isWished ? 'wished' : ''}`} 
             onClick={handleWishlistClick}
@@ -159,7 +150,6 @@ const BookCard = ({ book, isWished, onToggleWishlist, onAddToCart }) => {
         </div>
         
         <div className="book-card-details">
-          {/* 4. Рейтинг */}
           <div className="book-card-rating">
             {stars.length > 0 ? stars : (
               <span className="no-rating">Немає оцінок</span>
@@ -168,11 +158,10 @@ const BookCard = ({ book, isWished, onToggleWishlist, onAddToCart }) => {
             <span className="review-count">({reviewCount} оцінок)</span>
           </div>
 
-          {/* 5. Назва та Автор */}
           <h3 className="book-card-title">{title}</h3>
           <p className="book-card-author">{author}</p>
           
-          {/* 6. Ціна та Кнопка Кошика */}
+         
           <div className="book-card-footer">
             <div className="book-card-price">
               {hasDiscount && (

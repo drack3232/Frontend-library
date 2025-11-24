@@ -1,28 +1,24 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import BookCard from './BookCard'; // Імпорт нашої картки
+import BookCard from './BookCard'; 
 
-// URL твого сервера
+
 const API_URL = "http://localhost:5000";
 
 const LibraryPage = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Функція для видалення книги з бібліотеки
   const handleRemoveFromLibrary = async (bookId) => {
     const token = localStorage.getItem('token');
     if (!token) return; 
 
     try {
-      // 1. Видаляємо з сервера
       await axios.delete(`${API_URL}/api/wishlist/${bookId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
-      // 2. Видаляємо з локального стану (щоб вона миттєво зникла з екрану)
       setBooks(prevBooks => prevBooks.filter(book => book.id !== bookId));
 
     } catch (err) {
@@ -32,7 +28,6 @@ const LibraryPage = () => {
   };
 
   useEffect(() => {
-    // Функція для завантаження книг з бібліотеки
     const fetchLibraryBooks = async () => {
       const token = localStorage.getItem('token');
       
@@ -59,10 +54,7 @@ const LibraryPage = () => {
     fetchLibraryBooks();
   }, []); 
 
-  // --- Рендер компонента ---
-
   if (loading) {
-    // Додали обгортку
     return (
       <div className="container mx-auto px-4 py-8 text-center">
         🔄 Завантаження бібліотеки...
@@ -71,7 +63,6 @@ const LibraryPage = () => {
   }
 
   if (error) {
-    // Додали обгортку
     return (
       <div className="container mx-auto px-4 py-8 text-center text-red-600">
         {error}
@@ -80,7 +71,6 @@ const LibraryPage = () => {
   }
   
   if (books.length === 0) {
-     // Додали класи до існуючого container
      return (
         <div className="container mx-auto px-4 py-8 text-center">
             <h1 className="text-3xl font-bold mb-4">Моя бібліотека</h1>
@@ -92,14 +82,12 @@ const LibraryPage = () => {
      );
   }
 
-  // Якщо все добре і книги є:
+
   return (
-    // Додали класи до існуючого container
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Моя бібліотека</h1>
       <p className="mb-6 text-gray-700">Тут зібрані книги, які ви додали.</p>
       
-      {/* Наш чистий блок з картками */}
       <div className="books-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {books.map(book => (
           <BookCard

@@ -9,7 +9,7 @@ html, body, #root {
 }
 
 #root {
-  display: flex; /* Допомагає .app-layout розтягнутися */
+  display: flex; 
   flex-direction: column;
 }
 
@@ -56,7 +56,7 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px; /* Збільшив висоту для комфорту */
+  height: 64px; 
   width: 100%;
   padding: 0 20px;
   box-sizing: border-box;
@@ -78,7 +78,7 @@ h1 {
 }
 
 .cart-icon-link:hover {
-  transform: scale(1.1); /* Оновив з кольору на анімацію */
+  transform: scale(1.1); 
 }
 
 .logo {
@@ -130,7 +130,7 @@ h1 {
 }
 
 .search-input-header:focus {
-  border-color: #f25a38; /* Змінив на фірмовий колір */
+  border-color: #f25a38; 
   box-shadow: 0 0 0 2px rgba(242, 90, 56, 0.25);
   outline: none;
 }
@@ -141,16 +141,16 @@ h1 {
   gap: 15px;
 }
 
-/* ==================== СТИЛІ КНОПОК (KSD) ==================== */
+/* ==================== СТИЛІ КНОПОК  ==================== */
 .user-actions button,
 .user-actions a,
 .form button,
 .btn-delete,
 .btn-edit,
 .modal-content button[type="submit"],
-.btn-add-to-cart, /* Додав клас кнопки з кошика */
-.btn-outline, /* Додав клас кнопки відгуку */
-.review-form button[type="submit"] /* Додав кнопку з форми відгуку */
+.btn-add-to-cart, 
+.btn-outline, 
+.review-form button[type="submit"] 
 {
   padding: 10px 20px;
   border-radius: 8px;
@@ -163,20 +163,18 @@ h1 {
   text-decoration: none;
   display: inline-block;
   text-align: center;
-  box-sizing: border-box; /* Додав для узгодженості */
+  box-sizing: border-box; 
   
 }
-
-/* --- Основний стиль (Primary): Реєстрація, форми, Додати в кошик --- */
 .btn-register,
 .form button,
 .modal-content button[type="submit"],
 .btn-add-to-cart,
 .review-form button[type="submit"]
 {
-  background-color: #f25a38; /* Фірмовий помаранчевий KSD */
+  background-color: #f25a38; 
   color: white;
-  border-color: #f25a38; /* Додав для узгодженості */
+  border-color: #f25a38; 
 }
 
 .btn-register:hover,
@@ -202,7 +200,6 @@ h1 {
   background-color: #f5f5f5;
   border-color: #ccc;
 }
-/* Спеціальний hover для .btn-outline */
 .btn-outline {
   border-color: #f25a38;
   color: #f25a38;
@@ -280,8 +277,8 @@ h1 {
 .wishlist-content-card {
  max-width: 100%;
   max-width: 1200px;
-  margin: 0 auto; /* Центруємо сам блок на екрані */
-  padding: 0 16px; /* Невеликі відступи від країв екрану */
+  margin: 0 auto; 
+  padding: 0 16px; 
   box-sizing: border-box;
 }
 
@@ -290,7 +287,7 @@ h1 {
   font-size: 2rem;
   font-weight: bold;
   margin-bottom: 2rem;
-  color: white; /* Або твій колір тексту */
+  color: white; 
 }
 
 .empty-wishlist-message {
@@ -315,7 +312,7 @@ h1 {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: 100%; /* Розтягуємо картку */
+  height: 100%; 
   transition: all 0.3s ease-in-out;
 }
 .book-card:hover {
@@ -350,7 +347,7 @@ h1 {
   padding: 15px;
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* Займає вільний простір */
+  flex-grow: 1; 
 }
 .book-title {
   font-size: 1rem;
@@ -369,7 +366,7 @@ h1 {
 .book-actions {
   display: flex;
   gap: 10px;
-  margin-top: auto; /* Притискає кнопки до низу */
+  margin-top: auto; 
   padding: 15px;
   padding-top: 0;
 }
@@ -501,7 +498,7 @@ h1 {
   background-color: #f0f2f5;
   border: none;
   border-radius: 8px;
-  padding: 2px 4px; /* Зробив трохи більшим */
+  padding: 2px 4px; 
   cursor: pointer;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 1rem;
@@ -606,7 +603,7 @@ h1 {
   font-size: 1.8rem;
   margin: 0 0 20px;
   font-weight: 700;
-  text-align: left; /* Виправлено */
+  text-align: left; 
 }
 .characteristics-table {
   width: 100%;
@@ -861,7 +858,7 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 
 }
 .total-price-badge strong {
-  color: #B91C1C; /* Ще темніший червоний */
+  color: #B91C1C; 
   font-size: 14px;
 }
 .total-price-badge strong,
@@ -981,9 +978,9 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   height: 24px;
 }
 
-/* Контейнер .profile-menu (вже був, але ми його використовуємо) */
+
 .profile-menu {
-  position: relative; /* Важливо для позиціонування .dropdown-content */
+  position: relative; 
   margin-left: 12px;
 }
 
@@ -1013,7 +1010,6 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   height: 23px;
 }
 
-/* Значок "15" на іконці профілю */
 .profile-badge {
   position: absolute;
   top: -2px;
@@ -1028,7 +1024,6 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   border: 1px solid #fff;
 }
 
-/* Текст "ARTEM / Вітаємо!" */
 .profile-button-text {
   display: flex;
   flex-direction: column;
@@ -1060,13 +1055,9 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   transform: rotate(180deg);
 }
 
-
-/* === НОВІ СТИЛІ ДЛЯ ВИПАДАЮЧОГО МЕНЮ === */
-/* (Замінює старий .dropdown-content) */
-
 .dropdown-content {
   position: absolute;
-  top: calc(100% + 10px); /* 10px відступ від кнопки */
+  top: calc(100% + 10px); 
   right: 0;
   background-color: white;
   border-radius: 12px;
@@ -1074,7 +1065,7 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   width: 300px;
   z-index: 1001;
   border: 1px solid #eee;
-  overflow: hidden; /* Ховаємо кути */
+  overflow: hidden; 
   animation: dropdownFadeIn 0.2s ease-out;
 }
 .dropdown-content ul {
@@ -1086,13 +1077,13 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 /* Кожен елемент <li>...</li> */
 .dropdown-content li {
   margin: 0;
-  border-bottom: 1px solid #f0f0f0; /* Роздільник */
+  border-bottom: 1px solid #f0f0f0; 
 }
 .dropdown-content li:last-child {
   border-bottom: none;
 }
 
-/* Посилання <a> та <button> всередині <li> */
+
 .dropdown-content li a,
 .dropdown-content li button {
   display: flex;
@@ -1119,12 +1110,11 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   width: 25px;
   height: 25px;
   margin-right: 12px;
-  color: #555; /* Трохи світліші іконки */
+  color: #555;
 }
 
-/* Значок "15" біля "Повідомлення" */
 .dropdown-badge {
-  margin-left: auto; /* Притискає значок до правого краю */
+  margin-left: auto; 
   background-color: #FDC72A;
   color: #000;
   font-weight: 600;
@@ -1136,7 +1126,7 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 
 /* Червоний текст для "Вийти" */
 .dropdown-content li.logout-item button {
-  color: #e53e3e; /* Червоний */
+  color: #e53e3e; 
 }
 .dropdown-content li.logout-item svg {
   color: #e53e3e;
@@ -1153,14 +1143,13 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     transform: translateY(0);
   }
 }
-/* --- Нові стилі для BookCard --- */
 
 .book-card-container {
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
-  overflow: hidden; /* Важливо для заокруглення кутів */
+  overflow: hidden; 
   display: flex;
   flex-direction: column;
 }
@@ -1175,15 +1164,13 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   color: inherit;
   display: flex;
   flex-direction: column;
-  height: 100%; /* Картка займає всю висоту контейнера */
+  height: 100%;
 }
 
-/* 1. Обгортка Зображення */
 .book-card-image-wrapper {
   position: relative;
   width: 100%;
-  /* Встановлюємо співвідношення сторін (напр. 3:4) */
-  padding-top: 150%; /* 380 / 250 = 1.52 */
+  padding-top: 150%; 
   background-color: #f0f0f0;
 }
 
@@ -1191,7 +1178,7 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 @media (max-width: 768px) {
   .cart-modal-footer {
     width: 100%;
-    justify-content: space-between; /* Розсунути по краях на телефоні */
+    justify-content: space-between; 
     margin-top: 10px;
   }
 }
@@ -1202,8 +1189,7 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Масштабує зображення, щоб заповнити блок */
-  /* Стилізація, як на скріншоті (ефект 3D-книги) */
+  object-fit: cover; 
   border-radius: 4px 12px 12px 4px;
   transform: perspective(1000px) rotateY(-2deg);
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
@@ -1308,33 +1294,32 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 
 /* 5. Назва та Автор */
 .book-card-title {
-  font-size: 18px; /* Більший шрифт */
+  font-size: 18px; 
   font-weight: 600;
   line-height: 1.3;
   margin: 0;
-  /* Обрізаємо довгий текст */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;  
   overflow: hidden;
   text-overflow: ellipsis;
-  min-height: 46px; /* 2 рядки * 23px (приблизно) */
+  min-height: 46px;  
 }
 
 .book-card-author {
   font-size: 14px;
   color: #555;
   margin: 4px 0 0 0;
-  flex-grow: 1; /* Відштовхує ціну вниз */
+  flex-grow: 1; 
   padding-bottom: 12px;
 }
 
-/* 6. Підвал картки (Ціна + Кошик) */
+/* 6. Підвал картки  */
 .book-card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: auto; /* Завжди внизу */
+  margin-top: auto; 
 }
 
 .book-card-price {
@@ -1351,15 +1336,15 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .book-card-price .current-price {
-  font-size: 22px; /* Велика ціна */
+  font-size: 22px; 
   font-weight: 700;
-  color: #d9534f; /* Червонуватий */
+  color: #d9534f; 
   line-height: 1;
 }
 
 /* 7. Кнопка "Кошик" (жовта) */
 .book-card-cart-button {
-  background-color: #FDC72A; /* Жовтий, як у вашому хедері */
+  background-color: #FDC72A; 
   color: #000;
   border: none;
   border-radius: 50%;
@@ -1420,7 +1405,7 @@ body.dark .app-layout {
  background-color: #121212;
 }
 
-/* === Картки, секції, хедер, футер === */
+
 body.dark .app-header {
  background: #1e1e1e;
  border-bottom: 1px solid #333;
@@ -1437,10 +1422,10 @@ body.dark .form-section {
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 body.dark .admin-section {
-  background-color: #121212; /* Залишимо фон сторінки */
+  background-color: #121212; 
 }
 
-/* === Текст === */
+
 body.dark .logo,
 body.dark .main-nav a,
 body.dark h1, body.dark h2, body.dark h3, body.dark h4,
@@ -1477,7 +1462,7 @@ body.dark .empty-search-placeholder p {
  color: #aaa;
 }
 
-/* === Інтерактивні елементи === */
+
 body.dark .search-input-header {
  background-color: #333;
  border-color: #555;
@@ -1508,7 +1493,7 @@ body.dark .btn-outline:hover {
   color: white;
 }
 
-/* === Картка книги (Головне виправлення) === */
+/* === Картка книги === */
 body.dark .book-card-container {
  background: #2a2a2a;
  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -1563,7 +1548,7 @@ color: #aaa;
 }
 body.dark .logout-item button,
 body.dark .logout-item button svg {
-color: #e57373; /* Світліший червоний */
+color: #e57373; 
 }
 body.dark .logout-item button:hover {
 background-color: #4a3a3a;
@@ -1702,7 +1687,7 @@ body.dark .cart-items-list-fullpage {
 body.dark .cart-items-list-fullpage .cart-item {
   border-bottom-color: #444;
 }
-/* 🔥 ГОРИЗОНТАЛЬНИЙ СКРОЛ ДЛЯ ІСТОРІЇ */
+/* СКРОЛ ДЛЯ ІСТОРІЇ */
 .horizontal-scroll-container {
   display: flex;
   gap: 24px; 

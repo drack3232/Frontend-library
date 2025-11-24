@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Потрібен цей імпорт
+import { Link } from 'react-router-dom'; 
 import Portfolio from './Portfolio';
 import GenreSlider from './GenreSlider';
-// BookList не потрібен, оскільки ми мапимо книги прямо тут
+
 
 const MainPage = ({ books, newBook, setNewBook, addBook }) => {
   return (

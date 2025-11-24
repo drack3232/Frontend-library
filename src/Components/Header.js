@@ -7,7 +7,7 @@ const Header = ({ onLoginClick, onRegisterClick }) => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    window.location.href = '/'; // Перенаправлення на головну сторінку
+    window.location.href = '/'; 
   };
 
   return (
@@ -23,7 +23,7 @@ const Header = ({ onLoginClick, onRegisterClick }) => {
         </div>
         <div className="user-actions">
           {token ? (
-            // Новий блок для залогіненого користувача
+
             <div className="profile-menu">
               <button 
                 className="profile-button" 
@@ -46,7 +46,7 @@ const Header = ({ onLoginClick, onRegisterClick }) => {
               )}
             </div>
           ) : (
-            // Старий блок для гостя
+            
             <>
               <button className="btn-login" onClick={onLoginClick}>Вхід</button>
               <button className="btn-register" onClick={onRegisterClick}>Реєстрація</button>

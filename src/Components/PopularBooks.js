@@ -36,7 +36,7 @@ const PopularBooks = ({ wishlist, onToggleWishlist, onAddToCart }) => {
   return (
     <div className="popular-books-section mb-12">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-bold">Новинки у Ашота </h2>
+        <h2 className="text-3xl font-bold">Новинки у Kormak </h2>
       </div>
       
       

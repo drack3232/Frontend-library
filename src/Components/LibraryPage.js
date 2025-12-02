@@ -73,7 +73,7 @@ const LibraryPage = () => {
   if (books.length === 0) {
      return (
         <div className="container mx-auto px-4 py-8 text-center">
-            <h1 className="text-3xl font-bold mb-4">Моя бібліотека</h1>
+            <h1 className="text-3xl font-bold mb-4">Kormak</h1>
             <p className="text-gray-600">📚 Ваша бібліотека поки порожня.</p>
             <Link to="/" className="mt-4 inline-block bg-orange-500 text-white px-6 py-2 rounded hover:bg-orange-600">
                 Перейти до каталогу

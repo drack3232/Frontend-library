@@ -33,7 +33,7 @@ export const openDB = () => {
     });
 };
 
-// === BOOKS (Залишаємо як було) ===
+// === BOOKS ===
 export const saveBooksToCache = async (books) => {
     await saveData(STORE_BOOKS, books);
 };

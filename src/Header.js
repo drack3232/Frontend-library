@@ -123,7 +123,7 @@ const Header = ({
         <div className="container header-container-flex">
           
           <div className="header-left-flex">
-            <Link to="/" className="logo">📚 Онлайн Бібліотека</Link>
+            <Link to="/" className="logo">📚 Kormak book</Link>
             <nav className="main-nav">
               <ul>
                 <li><Link to="/" className="main-nav-link">Головна</Link></li>
